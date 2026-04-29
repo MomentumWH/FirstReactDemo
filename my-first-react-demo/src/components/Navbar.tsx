@@ -8,7 +8,6 @@ type NavItem = {
 }
 
 const navItems: NavItem[] = [
-  { label: '登录', path: '/', icon: '🔐' },
   { label: '首页', path: '/home', icon: '🏠' },
   { label: '关于', path: '/about', icon: '✨' },
   { label: '联系', path: '/contact', icon: '📮' },
@@ -18,7 +17,7 @@ const Navbar = () => {
   return (
     <header className="site-header">
       <nav className="site-nav" aria-label="主导航">
-        <NavLink className="site-brand" to="/" aria-label="返回首页">
+        <NavLink className="site-brand" to="/home" aria-label="返回首页">
           <span className="site-brand__mark">R</span>
           <span>
             <strong>Router Lab</strong>
