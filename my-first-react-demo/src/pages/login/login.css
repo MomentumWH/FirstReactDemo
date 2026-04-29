@@ -1,0 +1,169 @@
+﻿.loginContainerBox {
+  display: grid;
+  width: min(430px, calc(100vw - 40px));
+  margin: 76px auto;
+  padding: 34px;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 24px 70px rgba(79, 70, 229, 0.14);
+  backdrop-filter: blur(18px);
+}
+
+.loginContainerBox h1 {
+  margin: 0 0 24px;
+  color: #111827;
+  font-size: 38px;
+  letter-spacing: -0.04em;
+  text-align: center;
+}
+
+.loginContainerBox form {
+  display: grid;
+  gap: 16px;
+}
+
+.loginContainerBox form[data-submit-status='submitting'] {
+  animation: login-submit-pulse 800ms ease both;
+}
+
+.login-field {
+  display: grid;
+  gap: 8px;
+}
+
+.login-field label {
+  color: #334155;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.loginContainerBox input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid #dbe3f0;
+  border-radius: 16px;
+  color: #111827;
+  background: #ffffff;
+  outline: none;
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.loginContainerBox input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.13);
+}
+
+.loginContainerBox input[aria-invalid='true'] {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.12);
+}
+
+.login-field__error {
+  margin: 0;
+  color: #dc2626;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.login-submit-button {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 48px;
+  border: 0;
+  border-radius: 16px;
+  color: #ffffff;
+  background: #111827;
+  cursor: pointer;
+  font-weight: 900;
+  transition:
+    box-shadow 180ms ease,
+    opacity 180ms ease,
+    transform 180ms ease;
+}
+
+.login-submit-button::before {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.24), transparent);
+  content: '';
+  opacity: 0;
+  transform: translateX(-120%);
+}
+
+.login-submit-button span {
+  position: relative;
+  z-index: 1;
+}
+
+.login-submit-button:hover:not(:disabled) {
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.2);
+  transform: translateY(-1px);
+}
+
+.login-submit-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.68;
+}
+
+.login-submit-button:disabled::before {
+  animation: login-button-shine 800ms ease-in-out infinite;
+  opacity: 1;
+}
+
+.login-form-message {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.login-form-message--success {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.login-form-message--error {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+@keyframes login-submit-pulse {
+  0% {
+    filter: saturate(1);
+    transform: scale(1);
+  }
+
+  45% {
+    filter: saturate(1.2);
+    transform: scale(0.985);
+  }
+
+  100% {
+    filter: saturate(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes login-button-shine {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loginContainerBox form[data-submit-status='submitting'],
+  .login-submit-button:disabled::before {
+    animation: none;
+  }
+}

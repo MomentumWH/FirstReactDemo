@@ -1,0 +1,28 @@
+﻿.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.contact-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 0 18px;
+  border-radius: 15px;
+  font-weight: 900;
+}
+
+.contact-action--primary {
+  color: #ffffff;
+  background: #111827;
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.2);
+}
+
+.contact-action--secondary {
+  color: #312e81;
+  background: #eef2ff;
+}
