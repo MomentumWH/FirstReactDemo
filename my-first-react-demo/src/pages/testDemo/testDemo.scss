@@ -1,0 +1,59 @@
+.testDemo{
+  display: flex;
+  flex-direction: column;
+  width: min(1120px, 100%);
+  margin: 0 auto;
+}
+.testDemoTitleBox{
+  margin-top: 36px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 18px 50px rgba(47, 50, 84, 0.12);
+  backdrop-filter: blur(18px);
+}
+.testDemoTitle,
+.testDemoContentTitle {
+  display: flex;
+  justify-content: space-between;
+}
+
+.testDemoTitle p,
+.testDemoContentTitle p {
+  font-size: 36px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #ff6a00 0%, #ee0979 50%, #6a11cb 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.testDemoContentBox{
+
+  margin-top: 36px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 18px 50px rgba(47, 50, 84, 0.12);
+  backdrop-filter: blur(18px);
+}
+.ButtonLike{
+  background: linear-gradient(90deg, #d4c1f6 0%, #c3d9fa 100%);
+  border: none;
+  border-radius: 16px;
+  color:  #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  transition: transform 0.2s ease;
+  box-shadow: 0 18px 50px rgb(137 ,141, 225 , 0.12);
+  font-size:24px;
+  padding: 8px;
+  font-weight: bolder;
+}
+
+.ButtonLike:hover{
+  transform: scale(1.1);
+  box-shadow: 0 18px 50px rgba(47, 50, 84, 0.12);
+}

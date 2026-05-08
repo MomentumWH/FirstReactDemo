@@ -65,6 +65,52 @@
   gap: 8px;
 }
 
+.site-nav__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.site-user-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #1e293b;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.site-logout-button {
+  min-height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 16px;
+  background: #ef4444;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    box-shadow 220ms ease,
+    background 180ms ease;
+}
+
+.site-logout-button:hover {
+  background: #dc2626;
+  box-shadow: 0 12px 22px rgba(220, 38, 38, 0.24);
+  transform: translateY(-1px);
+}
+
+.site-logout-button:focus-visible {
+  outline: 3px solid rgba(248, 113, 113, 0.32);
+  outline-offset: 2px;
+}
+
 .site-nav__link {
   position: relative;
   overflow: hidden;
@@ -131,6 +177,10 @@
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .site-nav__actions {
+    justify-content: space-between;
+  }
+
   .site-nav__link {
     justify-content: center;
   }
@@ -144,5 +194,11 @@
   .site-nav__link {
     padding: 10px;
     font-size: 14px;
+  }
+
+  .site-user-chip,
+  .site-logout-button {
+    min-height: 40px;
+    font-size: 13px;
   }
 }

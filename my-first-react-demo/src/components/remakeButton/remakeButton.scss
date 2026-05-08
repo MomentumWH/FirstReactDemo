@@ -1,0 +1,30 @@
+.remake-button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 14px;
+  background: var(--remake-button-bg);
+  color: var(--remake-button-color);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.remake-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(99, 102, 241, 0.18);
+}
+
+.remake-button.is-active {
+  background: var(--remake-button-active-bg);
+  color: var(--remake-button-active-color);
+  box-shadow: 0 16px 30px rgba(106, 17, 203, 0.24);
+  transform: scale(1.04);
+}
+
+.remake-button__text {
+  font-size: 15px;
+  font-weight: 800;
+}
