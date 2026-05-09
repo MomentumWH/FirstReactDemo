@@ -1,0 +1,56 @@
+.antd-starter {
+  display: grid;
+  gap: 24px;
+}
+
+.antd-starter__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.antd-starter__header .ant-typography {
+  margin-bottom: 0;
+}
+
+.antd-starter__header .ant-typography.ant-typography-secondary,
+.antd-starter__header p.ant-typography {
+  max-width: 720px;
+}
+
+.antd-starter__eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: #2563eb;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.antd-starter__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 380px) minmax(0, 1fr);
+  gap: 20px;
+}
+
+.antd-starter__card {
+  border-radius: 20px;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.08);
+}
+
+.antd-starter__date-picker {
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .antd-starter__header,
+  .antd-starter__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .antd-starter__header {
+    flex-direction: column;
+  }
+}

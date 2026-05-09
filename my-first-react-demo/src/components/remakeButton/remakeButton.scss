@@ -1,30 +1,99 @@
 .remake-button {
+  --remake-button-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  --remake-button-hover-shadow: 0 16px 30px rgba(99, 102, 241, 0.2);
+  --remake-button-active-shadow: 0 18px 34px rgba(106, 17, 203, 0.24);
+
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 132px;
   padding: 12px 20px;
   border: none;
   border-radius: 14px;
   background: var(--remake-button-bg);
   color: var(--remake-button-color);
+  box-shadow: var(--remake-button-shadow);
   cursor: pointer;
+  overflow: hidden;
   transition:
     transform 0.2s ease,
     box-shadow 0.2s ease,
     background 0.2s ease,
-    color 0.2s ease;
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.remake-button::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  z-index: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 45%);
+  pointer-events: none;
+}
+
+.remake-button::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -120%;
+  width: 70%;
+  height: 100%;
+  z-index: 0;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-20deg);
+  transition: left 0.45s ease;
+  pointer-events: none;
 }
 
 .remake-button:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 12px 24px rgba(99, 102, 241, 0.18);
+  transform: translateY(-2px);
+  box-shadow: var(--remake-button-hover-shadow);
+}
+
+.remake-button:hover::after {
+  left: 140%;
+}
+
+.remake-button:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.remake-button:focus-visible {
+  outline: 2px solid rgba(59, 130, 246, 0.7);
+  outline-offset: 3px;
 }
 
 .remake-button.is-active {
   background: var(--remake-button-active-bg);
   color: var(--remake-button-active-color);
-  box-shadow: 0 16px 30px rgba(106, 17, 203, 0.24);
-  transform: scale(1.04);
+  box-shadow: var(--remake-button-active-shadow);
+  transform: translateY(-1px) scale(1.03);
 }
 
 .remake-button__text {
+  position: relative;
+  z-index: 1;
   font-size: 15px;
+  line-height: 1;
   font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .remake-button,
+  .remake-button::after {
+    transition: none;
+  }
+
+  .remake-button:hover,
+  .remake-button:active,
+  .remake-button.is-active {
+    transform: none;
+  }
 }

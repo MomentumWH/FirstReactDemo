@@ -29,6 +29,7 @@ const RemakeButton = ({
   return (
     <button
       className={`remake-button ${active ? 'is-active' : ''}`}
+      aria-pressed={active}
       onClick={() => {
         setActive((current) => !current)
         onClick?.()
