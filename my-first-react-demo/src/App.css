@@ -1,3 +1,11 @@
+.app-shell {
+  min-height: 100vh;
+}
+
+.app-shell__content {
+  min-height: 100vh;
+}
+
 .route-transition {
   animation: route-enter 800ms cubic-bezier(0.16, 1, 0.3, 1) both;
   transform-origin: 50% 24px;

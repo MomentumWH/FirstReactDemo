@@ -1,5 +1,5 @@
 ﻿.page-shell {
-  width: min(1120px, calc(100vw - 40px));
+  width: min(1680px, calc(100vw - clamp(64px, calc(4vw + 40px), 88px)));
   margin: 42px auto 72px;
   color: #172033;
   text-align: left;

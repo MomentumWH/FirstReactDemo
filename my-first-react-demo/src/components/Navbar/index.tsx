@@ -12,7 +12,9 @@ const navItems: NavItem[] = [
   { label: '\u9996\u9875', path: '/home', icon: '\ud83c\udfe0' },
   { label: '\u5173\u4e8e', path: '/about', icon: '\u2139\ufe0f' },
   { label: '\u8054\u7cfb', path: '/contact', icon: '\ud83d\udce7' },
+  { label: 'MUI Demo', path: '/mui-demo', icon: '\ud83e\udde9' },
   { label: 'testDemo', path: '/testDemo', icon: '\ud83d\udce0' },
+  { label: 'videoDemo', path: '/videoDemo', icon: '\ud83c\udfac' },
 ]
 
 const Navbar = () => {

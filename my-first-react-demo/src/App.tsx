@@ -4,7 +4,9 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 import Home from './pages/Home'
 import Login from './pages/login'
+import MUIDemo from './pages/muiDemo'
 import TestDemo from "./pages/testDemo";
+import VideoDemo from './pages/videoDemo'
 import { useAuthStore } from './stores/auth'
 import './App.css'
 
@@ -22,7 +24,9 @@ const AnimatedRoutes = ({ isAuthenticated }: AnimatedRoutesProps) => {
         <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate replace to="/" />} />
         <Route path="/about" element={isAuthenticated ? <About /> : <Navigate replace to="/" />} />
         <Route path="/contact" element={isAuthenticated ? <Contact /> : <Navigate replace to="/" />} />
+        <Route path="/mui-demo" element={isAuthenticated ? <MUIDemo /> : <Navigate replace to="/" />} />
         <Route path="/testDemo" element={isAuthenticated ? <TestDemo /> : <Navigate replace to="/" />} />
+        <Route path="/videoDemo" element={isAuthenticated ? <VideoDemo /> : <Navigate replace to="/" />} />
       </Routes>
     </div>
   )
@@ -34,10 +38,12 @@ const AppShell = () => {
   const shouldShowNavbar = isAuthenticated && location.pathname !== '/'
 
   return (
-    <>
+    <div className="app-shell">
       {shouldShowNavbar ? <Navbar /> : null}
-      <AnimatedRoutes isAuthenticated={isAuthenticated} />
-    </>
+      <div className="app-shell__content">
+        <AnimatedRoutes isAuthenticated={isAuthenticated} />
+      </div>
+    </div>
   )
 }
 
