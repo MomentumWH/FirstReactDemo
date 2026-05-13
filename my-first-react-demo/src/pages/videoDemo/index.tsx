@@ -45,7 +45,7 @@ const featureCards = [
   },
   {
     label: '核心能力',
-    value: '切换片源、静音、自动播放、快退 10 秒',
+    value: '切换片源、静音、自动播放、快退 5 秒、快进 5 秒',
   },
   {
     label: '适合扩展',
@@ -56,15 +56,23 @@ const featureCards = [
 const VideoDemo = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const objectUrlRef = useRef<string | null>(null)
+  const pendingAutoplayAfterSwitchRef = useRef(false)
+  const switchStartedAtRef = useRef<number | null>(null)
+  const switchTimeoutRef = useRef<number | null>(null)
   const [selectedPresetId, setSelectedPresetId] = useState(presetVideos[0].id)
   const [localVideo, setLocalVideo] = useState<CurrentVideo | null>(null)
   const [autoplay, setAutoplay] = useState(true)
   const [muted, setMuted] = useState(true)
+  const [isSwitchingSource, setIsSwitchingSource] = useState(false)
 
   const currentVideo = localVideo ?? presetVideos.find((item) => item.id === selectedPresetId) ?? presetVideos[0]
 
   useEffect(() => {
     return () => {
+      if (switchTimeoutRef.current !== null) {
+        window.clearTimeout(switchTimeoutRef.current)
+      }
+
       if (objectUrlRef.current) {
         URL.revokeObjectURL(objectUrlRef.current)
       }
@@ -79,14 +87,46 @@ const VideoDemo = () => {
     }
 
     videoElement.muted = muted
-    videoElement.load()
+  }, [muted])
 
-    if (autoplay) {
-      void videoElement.play().catch(() => {})
+  useEffect(() => {
+    const videoElement = videoRef.current
+
+    if (!videoElement) {
+      return
     }
-  }, [autoplay, currentVideo.src, muted])
+
+    videoElement.load()
+  }, [currentVideo.src])
+
+  const startSourceSwitch = () => {
+    if (switchTimeoutRef.current !== null) {
+      window.clearTimeout(switchTimeoutRef.current)
+      switchTimeoutRef.current = null
+    }
+
+    switchStartedAtRef.current = Date.now()
+    setIsSwitchingSource(true)
+    videoRef.current?.pause()
+  }
+
+  useEffect(() => {
+    const videoElement = videoRef.current
+
+    if (!videoElement || !autoplay || isSwitchingSource) {
+      return
+    }
+
+    void videoElement.play().catch(() => {})
+  }, [autoplay, isSwitchingSource])
 
   const handlePresetChange = (presetId: string) => {
+    if (presetId === selectedPresetId && localVideo === null) {
+      return
+    }
+
+    pendingAutoplayAfterSwitchRef.current = autoplay
+    startSourceSwitch()
     setSelectedPresetId(presetId)
 
     if (objectUrlRef.current) {
@@ -111,6 +151,9 @@ const VideoDemo = () => {
     const nextObjectUrl = URL.createObjectURL(selectedFile)
     objectUrlRef.current = nextObjectUrl
 
+    pendingAutoplayAfterSwitchRef.current = autoplay
+    startSourceSwitch()
+
     setLocalVideo({
       title: selectedFile.name,
       src: nextObjectUrl,
@@ -129,8 +172,65 @@ const VideoDemo = () => {
       return
     }
 
-    videoElement.currentTime = Math.max(0, videoElement.currentTime - 10)
+    videoElement.currentTime = Math.max(0, videoElement.currentTime - 5)
     void videoElement.play().catch(() => {})
+  }
+
+  const handleFastForward = () => {
+    const videoElement = videoRef.current
+
+    if (!videoElement) {
+      return
+    }
+
+    const duration = Number.isFinite(videoElement.duration) ? videoElement.duration : Number.MAX_SAFE_INTEGER
+    videoElement.currentTime = Math.min(duration, videoElement.currentTime + 5)
+    void videoElement.play().catch(() => {})
+  }
+
+  const finishSourceSwitch = () => {
+    const videoElement = videoRef.current
+    const startedAt = switchStartedAtRef.current
+
+    if (startedAt === null) {
+      setIsSwitchingSource(false)
+      return
+    }
+
+    const elapsed = Date.now() - startedAt
+    const remaining = Math.max(0, 500 - elapsed)
+
+    if (switchTimeoutRef.current !== null) {
+      window.clearTimeout(switchTimeoutRef.current)
+    }
+
+    switchTimeoutRef.current = window.setTimeout(() => {
+      setIsSwitchingSource(false)
+      switchStartedAtRef.current = null
+      switchTimeoutRef.current = null
+
+      if (pendingAutoplayAfterSwitchRef.current && videoElement) {
+        void videoElement.play().catch(() => {})
+      }
+
+      pendingAutoplayAfterSwitchRef.current = false
+    }, remaining)
+  }
+
+  const handleVideoLoaded = () => {
+    finishSourceSwitch()
+  }
+
+  const handleVideoLoadStart = () => {
+    if (switchStartedAtRef.current === null) {
+      switchStartedAtRef.current = Date.now()
+      setIsSwitchingSource(true)
+    }
+  }
+
+  const handleVideoError = () => {
+    pendingAutoplayAfterSwitchRef.current = false
+    finishSourceSwitch()
   }
 
   return (
@@ -180,19 +280,31 @@ const VideoDemo = () => {
               <span className="video-duration">{currentVideo.duration}</span>
             </div>
 
-            <div className="video-frame">
+            <div className={`video-frame${isSwitchingSource ? ' is-switching' : ''}`}>
               <video
                 ref={videoRef}
                 autoPlay={autoplay}
                 className="video-frame__player"
                 controls
                 muted={muted}
+                onCanPlay={handleVideoLoaded}
+                onError={handleVideoError}
+                onLoadStart={handleVideoLoadStart}
+                onLoadedData={handleVideoLoaded}
                 playsInline
                 preload="metadata"
               >
                 <source src={currentVideo.src} type="video/mp4" />
                 当前浏览器不支持 video 标签播放。
               </video>
+              <div
+                aria-hidden={!isSwitchingSource}
+                className={`video-frame__overlay${isSwitchingSource ? ' is-visible' : ''}`}
+              >
+                <span className="video-frame__overlay-badge">切换片源中</span>
+                <strong>{currentVideo.title}</strong>
+                <div className="video-frame__overlay-loader" />
+              </div>
             </div>
 
             <p className="video-player-card__description">{currentVideo.description}</p>
@@ -205,7 +317,10 @@ const VideoDemo = () => {
                 {muted ? '取消静音' : '切换静音'}
               </button>
               <button onClick={handleReplay} type="button">
-                快退 10 秒
+                快退 5 秒
+              </button>
+              <button onClick={handleFastForward} type="button">
+                快进 5 秒
               </button>
             </div>
           </article>

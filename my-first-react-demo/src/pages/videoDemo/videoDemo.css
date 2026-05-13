@@ -175,6 +175,7 @@
 }
 
 .video-frame {
+  position: relative;
   margin-top: 20px;
   overflow: hidden;
   border-radius: 24px;
@@ -189,6 +190,71 @@
   width: 100%;
   aspect-ratio: 16 / 9;
   background: transparent;
+  transition:
+    opacity 260ms ease,
+    transform 360ms ease,
+    filter 260ms ease;
+}
+
+.video-frame.is-switching .video-frame__player {
+  opacity: 0.32;
+  filter: saturate(0.72) blur(1px);
+  transform: scale(0.985);
+}
+
+.video-frame__overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 12px;
+  padding: 24px;
+  color: #f8fafc;
+  background:
+    linear-gradient(180deg, rgba(2, 6, 23, 0.28), rgba(2, 6, 23, 0.58)),
+    radial-gradient(circle at top, rgba(34, 211, 238, 0.18), transparent 50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 220ms ease;
+}
+
+.video-frame__overlay.is-visible {
+  opacity: 1;
+}
+
+.video-frame__overlay strong {
+  font-size: clamp(18px, 2vw, 22px);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+}
+
+.video-frame__overlay-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.video-frame__overlay-loader {
+  width: 46px;
+  height: 46px;
+  border: 3px solid rgba(255, 255, 255, 0.18);
+  border-top-color: #22d3ee;
+  border-radius: 50%;
+  animation: video-frame-spin 900ms linear infinite;
+}
+
+@keyframes video-frame-spin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .video-player-card__description {
@@ -329,5 +395,14 @@
   .video-player-card__header {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-frame__player,
+  .video-frame__overlay,
+  .video-frame__overlay-loader {
+    transition: none;
+    animation: none;
   }
 }
