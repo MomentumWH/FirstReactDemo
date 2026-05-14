@@ -271,7 +271,7 @@
   margin-top: 20px;
 }
 
-.video-toolbar button,
+.video-toolbar .MuiButton-root,
 .video-source-card,
 .video-upload-card {
   transition:
@@ -280,17 +280,7 @@
     border-color 180ms ease;
 }
 
-.video-toolbar button {
-  min-height: 44px;
-  padding: 0 16px;
-  border: 1px solid rgba(14, 116, 144, 0.18);
-  border-radius: 14px;
-  color: #0f172a;
-  background: #ffffff;
-  cursor: pointer;
-}
-
-.video-toolbar button:hover,
+.video-toolbar .MuiButton-root:hover,
 .video-source-card:hover,
 .video-upload-card:hover {
   transform: translateY(-2px);

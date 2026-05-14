@@ -1,135 +1,107 @@
-﻿import '../pages.css'
-import './Contact.css'
+import ContactMailRoundedIcon from '@mui/icons-material/ContactMailRounded'
+import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded'
+import PhoneRoundedIcon from '@mui/icons-material/PhoneRounded'
+import PsychologyRoundedIcon from '@mui/icons-material/PsychologyRounded'
+import RocketLaunchRoundedIcon from '@mui/icons-material/RocketLaunchRounded'
+import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded'
+import { Button, Grid, Stack, Typography } from '@mui/material'
+import { HeroPanel, InfoCard, PageContainer, SectionPanel } from '../../components/pageScaffold'
 
-type ContactMethod = {
-  icon: string
-  title: string
-  value: string
-  href?: string
-}
-
-type ServicePromise = {
-  title: string
-  description: string
-  icon: string
-}
-
-const contactMethods: ContactMethod[] = [
+const contactMethods = [
   {
-    icon: '📧',
+    description: 'contact@example.com',
+    icon: <ContactMailRoundedIcon />,
     title: '邮箱',
-    value: 'contact@example.com',
-    href: 'mailto:contact@example.com',
   },
   {
-    icon: '📱',
+    description: '+1 (555) 123-4567',
+    icon: <PhoneRoundedIcon />,
     title: '电话',
-    value: '+1 (555) 123-4567',
-    href: 'tel:+15551234567',
   },
   {
-    icon: '📍',
+    description: '北京市朝阳区科技园区',
+    icon: <LocationOnRoundedIcon />,
     title: '地址',
-    value: '北京市朝阳区科技园区',
   },
 ]
 
-const servicePromises: ServicePromise[] = [
+const servicePromises = [
   {
-    icon: '⚡',
-    title: '快速反馈',
-    description: '收到消息后尽快确认需求，并给出清晰的下一步建议。',
+    description: '收到消息后尽快确认需求，并给出清晰的下一步建议与时间预期。',
+    icon: <RocketLaunchRoundedIcon />,
+    title: '快速响应',
   },
   {
-    icon: '🧠',
+    description: '优先理解你真正要解决的问题，而不只是对页面表面做一些局部修改。',
+    icon: <PsychologyRoundedIcon />,
     title: '聚焦问题',
-    description: '优先理解你的真实目标，而不是只停留在表面修改。',
   },
   {
-    icon: '🛠️',
+    description: '基于使用反馈持续优化页面结构、交互体验与代码质量，而不是一次性交付后停住。',
+    icon: <TaskAltRoundedIcon />,
     title: '持续优化',
-    description: '根据使用反馈迭代页面结构、交互体验和代码质量。',
   },
 ]
 
 const Contact = () => {
   return (
-    <main className="page-shell">
-      <section className="page-hero" aria-labelledby="contact-title">
-        <div className="page-hero__content">
-          <span className="page-kicker">Contact</span>
-          <h1 id="contact-title">有问题或建议？欢迎联系</h1>
-          <p>
-            如果你正在学习 React Router、TypeScript 或 Vite，可以通过下面的方式联系我们。我们会尽量用清晰、可执行的方式给你反馈。
-          </p>
+    <PageContainer>
+      <HeroPanel
+        kicker="Contact"
+        title="有问题或想法，欢迎继续联系"
+        description="如果你正在学习 React Router、TypeScript、Vite 或 MUI，这个页面可以继续扩展成真实的反馈入口。它已经具备基础动作按钮、信息卡片和服务说明区块。"
+        actions={(
+          <>
+            <Button component="a" href="mailto:contact@example.com" variant="contained">
+              发送邮件
+            </Button>
+            <Button component="a" href="tel:+15551234567" variant="outlined" color="secondary">
+              拨打电话
+            </Button>
+          </>
+        )}
+        side={(
+          <Stack spacing={1.25}>
+            <Typography color="text.secondary" sx={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              建议附上
+            </Typography>
+            <Typography variant="h5">问题描述、预期效果、截图或报错信息</Typography>
+            <Typography color="text.secondary" sx={{ lineHeight: 1.8 }}>
+              这样可以更快定位问题，也更方便从页面层面一路推进到具体实现方案。
+            </Typography>
+          </Stack>
+        )}
+      />
 
-          <div className="contact-actions">
-            <a className="contact-action contact-action--primary" href="mailto:contact@example.com">
-              📧 发送邮件
-            </a>
-            <a className="contact-action contact-action--secondary" href="tel:+15551234567">
-              📱 拨打电话
-            </a>
-          </div>
-        </div>
-
-        <div className="page-hero__panel" aria-label="联系提示">
-          <strong>建议附上</strong>
-          <span>问题描述、期望效果、当前截图或报错信息，这样能更快定位问题。</span>
-        </div>
-      </section>
-
-      <section className="page-section" aria-labelledby="contact-methods-title">
-        <div className="section-header">
-          <div>
-            <span className="section-kicker">Reach us</span>
-            <h2 id="contact-methods-title">联系方式</h2>
-          </div>
-        </div>
-
-        <div className="card-grid">
+      <SectionPanel
+        kicker="Reach Us"
+        title="联系方式"
+        description="这些卡片已经适合继续接入真实联系方式、工单系统或在线咨询入口。"
+      >
+        <Grid container spacing={3}>
           {contactMethods.map((method) => (
-            <article className="info-card" key={method.title}>
-              <span className="info-card__icon" aria-hidden="true">
-                {method.icon}
-              </span>
-              <div>
-                <h3>{method.title}</h3>
-                <p>
-                  {method.href ? <a href={method.href}>{method.value}</a> : method.value}
-                </p>
-              </div>
-            </article>
+            <Grid key={method.title} size={{ xs: 12, md: 4 }}>
+              <InfoCard icon={method.icon} title={method.title} description={method.description} />
+            </Grid>
           ))}
-        </div>
-      </section>
+        </Grid>
+      </SectionPanel>
 
-      <section className="page-section" aria-labelledby="service-title">
-        <div className="section-header">
-          <div>
-            <span className="section-kicker">Service</span>
-            <h2 id="service-title">我们如何处理反馈</h2>
-          </div>
-        </div>
-
-        <div className="card-grid">
+      <SectionPanel
+        kicker="Service"
+        title="我们如何处理反馈"
+        description="不仅要接住消息，还要给用户明确的反馈路径和后续动作。"
+      >
+        <Grid container spacing={3}>
           {servicePromises.map((service) => (
-            <article className="info-card" key={service.title}>
-              <span className="info-card__icon" aria-hidden="true">
-                {service.icon}
-              </span>
-              <div>
-                <h3>{service.title}</h3>
-                <p>{service.description}</p>
-              </div>
-            </article>
+            <Grid key={service.title} size={{ xs: 12, md: 4 }}>
+              <InfoCard icon={service.icon} title={service.title} description={service.description} />
+            </Grid>
           ))}
-        </div>
-      </section>
-    </main>
+        </Grid>
+      </SectionPanel>
+    </PageContainer>
   )
 }
 
 export default Contact
-
-

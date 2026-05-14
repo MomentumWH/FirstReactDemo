@@ -1,33 +1,43 @@
+import { Suspense } from 'react'
+import type { ComponentType } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
 import Navbar from './components/Navbar/index'
-import About from './pages/About'
-import Contact from './pages/Contact'
-import Home from './pages/Home'
-import Login from './pages/login'
-import MUIDemo from './pages/muiDemo'
-import TestDemo from "./pages/testDemo";
-import VideoDemo from './pages/videoDemo'
+import { appRoutes } from './routes'
 import { useAuthStore } from './stores/auth'
 import './App.css'
 
-type AnimatedRoutesProps = {
-  isAuthenticated: boolean
+type RouteAccess = 'guest-only' | 'protected'
+
+const renderRouteElement = (
+  access: RouteAccess,
+  isAuthenticated: boolean,
+  RouteComponent: ComponentType,
+) => {
+  if (access === 'guest-only') {
+    return isAuthenticated ? <Navigate replace to="/home" /> : <RouteComponent />
+  }
+
+  return isAuthenticated ? <RouteComponent /> : <Navigate replace to="/" />
 }
 
-const AnimatedRoutes = ({ isAuthenticated }: AnimatedRoutesProps) => {
+const AnimatedRoutes = () => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
   const location = useLocation()
 
   return (
     <div className="route-transition" key={location.pathname}>
-      <Routes location={location}>
-        <Route path="/" element={isAuthenticated ? <Navigate replace to="/home" /> : <Login />} />
-        <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate replace to="/" />} />
-        <Route path="/about" element={isAuthenticated ? <About /> : <Navigate replace to="/" />} />
-        <Route path="/contact" element={isAuthenticated ? <Contact /> : <Navigate replace to="/" />} />
-        <Route path="/mui-demo" element={isAuthenticated ? <MUIDemo /> : <Navigate replace to="/" />} />
-        <Route path="/testDemo" element={isAuthenticated ? <TestDemo /> : <Navigate replace to="/" />} />
-        <Route path="/videoDemo" element={isAuthenticated ? <VideoDemo /> : <Navigate replace to="/" />} />
-      </Routes>
+      <Suspense fallback={<div className="route-loading">Loading page...</div>}>
+        <Routes location={location}>
+          {appRoutes.map((route) => (
+            <Route
+              key={route.path}
+              path={route.path}
+              element={renderRouteElement(route.access, isAuthenticated, route.component)}
+            />
+          ))}
+          <Route path="*" element={<Navigate replace to={isAuthenticated ? '/home' : '/'} />} />
+        </Routes>
+      </Suspense>
     </div>
   )
 }
@@ -41,7 +51,7 @@ const AppShell = () => {
     <div className="app-shell">
       {shouldShowNavbar ? <Navbar /> : null}
       <div className="app-shell__content">
-        <AnimatedRoutes isAuthenticated={isAuthenticated} />
+        <AnimatedRoutes />
       </div>
     </div>
   )

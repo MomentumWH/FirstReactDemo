@@ -1,139 +1,104 @@
-﻿import '../pages.css'
-import './About.css'
+import BoltRoundedIcon from '@mui/icons-material/BoltRounded'
+import HubRoundedIcon from '@mui/icons-material/HubRounded'
+import IntegrationInstructionsRoundedIcon from '@mui/icons-material/IntegrationInstructionsRounded'
+import RuleRoundedIcon from '@mui/icons-material/RuleRounded'
+import TipsAndUpdatesRoundedIcon from '@mui/icons-material/TipsAndUpdatesRounded'
+import { Grid, List, ListItem, ListItemIcon, ListItemText, Stack, Typography } from '@mui/material'
+import { HeroPanel, InfoCard, PageContainer, SectionPanel } from '../../components/pageScaffold'
 
-type TechItem = {
-  name: string
-  description: string
-  icon: string
-}
-
-type WorkflowItem = {
-  title: string
-  description: string
-}
-
-const techStack: TechItem[] = [
+const techStack = [
   {
-    name: 'React 19',
-    description: '负责组件化界面与状态驱动渲染',
-    icon: '⚛️',
+    description: '负责组件化界面与状态驱动渲染，是整个页面体验的核心运行时。',
+    icon: <IntegrationInstructionsRoundedIcon />,
+    title: 'React 19',
   },
   {
-    name: 'React Router 6',
-    description: '管理页面路由、导航与地址同步',
-    icon: '🧭',
+    description: '管理页面路由、导航状态与地址同步，让多页面结构保持清晰。',
+    icon: <HubRoundedIcon />,
+    title: 'React Router 6',
   },
   {
-    name: 'Vite',
-    description: '提供极速开发服务和高效构建体验',
-    icon: '⚡',
+    description: '提供极速开发服务和更轻量的构建体验，适合快速迭代演示项目。',
+    icon: <BoltRoundedIcon />,
+    title: 'Vite',
   },
   {
-    name: 'TypeScript',
-    description: '为组件数据、事件和状态增加类型约束',
-    icon: '🔷',
+    description: '为组件数据、事件与状态加上类型约束，降低后续扩展成本。',
+    icon: <RuleRoundedIcon />,
+    title: 'TypeScript',
   },
 ]
 
-const workflow: WorkflowItem[] = [
-  {
-    title: '配置路由入口',
-    description: '在 App 中通过 Routes 与 Route 定义页面路径和组件映射。',
-  },
-  {
-    title: '创建页面组件',
-    description: '每个页面负责自己的内容结构，保持组件职责清晰。',
-  },
-  {
-    title: '增强类型安全',
-    description: '使用 TS 类型描述列表数据，减少字段拼写和结构错误。',
-  },
-]
-
-const highlights: string[] = [
-  '清晰展示 React Router 的基础用法',
-  '保持页面结构语义化，便于继续扩展',
-  '通过 TypeScript 约束页面数据结构',
+const workflow = [
+  '在 App 中通过共享路由配置统一维护页面路径、组件映射和访问权限。',
+  '页面优先复用同一套 MUI 布局壳与信息卡片，减少风格漂移和结构分叉。',
+  '使用类型定义约束表单、列表和状态结构，让后续开发更稳定也更好维护。',
 ]
 
 const About = () => {
   return (
-    <main className="page-shell">
-      <section className="page-hero" aria-labelledby="about-title">
-        <div className="page-hero__content">
-          <span className="page-kicker">React Router Demo</span>
-          <h1 id="about-title">关于这个示例项目</h1>
-          <p>
-            这是一个使用 React Router 6 构建的单页应用示例，用简洁的页面切换、清晰的导航状态和现代化组件结构，帮助你快速理解前端路由的基本工作方式。
-          </p>
-        </div>
+    <PageContainer>
+      <HeroPanel
+        kicker="React Router Demo"
+        title="关于这个重构后的示例项目"
+        description="这个项目现在不只是用来演示页面切换，它已经具备了继续往真实前端原型扩展的基础条件。共享主题、导航壳、表单和卡片模块已经成型，后续加业务页面时会更顺畅。"
+        side={(
+          <Stack spacing={1.5}>
+            <Typography color="text.secondary" sx={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+              Project Goal
+            </Typography>
+            <Typography variant="h5">用一套统一的 MUI 设计语言组织整个前端项目</Typography>
+            <Typography color="text.secondary" sx={{ lineHeight: 1.8 }}>
+              重点不是堆叠组件，而是把路由、页面结构、信息密度和表单交互都放进同一套可维护的系统里。
+            </Typography>
+          </Stack>
+        )}
+      />
 
-        <div className="page-hero__panel" aria-label="项目目标">
-          <strong>项目目标</strong>
-          <span>展示如何在 React 应用中配置和使用路由，并逐步迁移到 TypeScript 写法。</span>
-        </div>
-      </section>
-
-      <section className="page-section" aria-labelledby="stack-title">
-        <div className="section-header">
-          <div>
-            <span className="section-kicker">Tech Stack</span>
-            <h2 id="stack-title">技术栈</h2>
-          </div>
-        </div>
-
-        <div className="card-grid card-grid--four">
+      <SectionPanel
+        kicker="Tech Stack"
+        title="技术栈"
+        description="依赖保持克制，但每一层职责都足够明确，适合继续承接中小型业务页面。"
+      >
+        <Grid container spacing={3}>
           {techStack.map((tech) => (
-            <article className="info-card" key={tech.name}>
-              <span className="info-card__icon" aria-hidden="true">
-                {tech.icon}
-              </span>
-              <div>
-                <h3>{tech.name}</h3>
-                <p>{tech.description}</p>
-              </div>
-            </article>
+            <Grid key={tech.title} size={{ xs: 12, sm: 6, lg: 3 }}>
+              <InfoCard icon={tech.icon} title={tech.title} description={tech.description} />
+            </Grid>
           ))}
-        </div>
-      </section>
+        </Grid>
+      </SectionPanel>
 
-      <section className="page-section" aria-labelledby="workflow-title">
-        <div className="section-header">
-          <div>
-            <span className="section-kicker">Workflow</span>
-            <h2 id="workflow-title">项目组织方式</h2>
-          </div>
-        </div>
-
-        <div className="card-grid">
+      <SectionPanel
+        kicker="Workflow"
+        title="项目组织方式"
+        description="这几条原则基本决定了后续继续增加页面和功能时，项目还能否保持整洁。"
+      >
+        <List disablePadding>
           {workflow.map((item, index) => (
-            <article className="workflow-card" key={item.title}>
-              <span className="workflow-card__step">{index + 1}</span>
-              <div>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-              </div>
-            </article>
+            <ListItem
+              key={item}
+              disableGutters
+              sx={{
+                alignItems: 'flex-start',
+                px: 0,
+                py: 1.75,
+                borderBottom: index === workflow.length - 1 ? 'none' : '1px solid rgba(148, 163, 184, 0.14)',
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 44, mt: 0.25 }}>
+                <TipsAndUpdatesRoundedIcon color="secondary" />
+              </ListItemIcon>
+              <ListItemText
+                primary={<Typography sx={{ fontWeight: 700 }}>{`0${index + 1}`}</Typography>}
+                secondary={<Typography color="text.secondary" sx={{ mt: 0.5, lineHeight: 1.8 }}>{item}</Typography>}
+              />
+            </ListItem>
           ))}
-        </div>
-      </section>
-
-      <section className="page-section dark-section" aria-labelledby="value-title">
-        <div>
-          <span className="section-kicker">Why it matters</span>
-          <h2 id="value-title">你可以从这里学到什么？</h2>
-        </div>
-
-        <ul className="feature-list">
-          {highlights.map((highlight) => (
-            <li key={highlight}>{highlight}</li>
-          ))}
-        </ul>
-      </section>
-    </main>
+        </List>
+      </SectionPanel>
+    </PageContainer>
   )
 }
 
 export default About
-
-

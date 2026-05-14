@@ -1,25 +1,27 @@
 import { type ChangeEvent, type FormEvent, useState } from 'react'
+import LockRoundedIcon from '@mui/icons-material/LockRounded'
+import ShieldRoundedIcon from '@mui/icons-material/ShieldRounded'
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/auth'
-import './login.css'
 
 type LoginFormValues = {
-  user: string
   password: string
+  user: string
 }
 
 type LoginFormErrors = Partial<Record<keyof LoginFormValues, string>>
 
 type SubmitStatus = 'idle' | 'submitting' | 'success' | 'error'
-
-type LoginField = {
-  autoComplete: string
-  id: string
-  label: string
-  name: keyof LoginFormValues
-  placeholder: string
-  type: string
-}
 
 const initialFormValues: LoginFormValues = {
   user: '',
@@ -28,40 +30,20 @@ const initialFormValues: LoginFormValues = {
 
 const SUBMIT_TRANSITION_MS = 800
 
-const wait = (duration: number) => new Promise<void>(
-  (resolve) => window.setTimeout(resolve, duration))
-
-const loginFields: LoginField[] = [
-  {
-    autoComplete: 'username',
-    id: 'login-user',
-    label: '\u8d26\u53f7',
-    name: 'user',
-    placeholder: '\u8bf7\u8f93\u5165\u8d26\u53f7',
-    type: 'text',
-  },
-  {
-    autoComplete: 'current-password',
-    id: 'login-password',
-    label: '\u5bc6\u7801',
-    name: 'password',
-    placeholder: '\u8bf7\u8f93\u5165\u5bc6\u7801',
-    type: 'password',
-  },
-]
+const wait = (duration: number) => new Promise<void>((resolve) => window.setTimeout(resolve, duration))
 
 const validateLoginForm = (values: LoginFormValues): LoginFormErrors => {
   const errors: LoginFormErrors = {}
 
   if (!values.user.trim()) {
-    errors.user = '\u8bf7\u8f93\u5165\u8d26\u53f7'
+    errors.user = '请输入账号'
   }
 
   if (!values.password) {
-    errors.password = '\u8bf7\u8f93\u5165\u5bc6\u7801'
+    errors.password = '请输入密码'
   }
   else if (values.password.length < 6) {
-    errors.password = '\u5bc6\u7801\u81f3\u5c11\u9700\u8981 6 \u4f4d'
+    errors.password = '密码至少需要 6 位'
   }
 
   return errors
@@ -70,7 +52,7 @@ const validateLoginForm = (values: LoginFormValues): LoginFormErrors => {
 const hasErrors = (errors: LoginFormErrors) => Object.values(errors).some(Boolean)
 
 const submitLogin = async (values: LoginFormValues) => {
-  console.log('\u767b\u5f55\u63d0\u4ea4\u6570\u636e\uff1a', {
+  console.log('登录提交数据:', {
     user: values.user,
     password: '******',
   })
@@ -131,65 +113,163 @@ const Login = () => {
   const isSubmitting = submitStatus === 'submitting'
 
   return (
-    <main className="login-page">
-      <span className="login-orb login-orb--blue" aria-hidden="true" />
-      <span className="login-orb login-orb--violet" aria-hidden="true" />
-      <span className="login-orb login-orb--green" aria-hidden="true" />
+    <Box
+      component="main"
+      sx={{
+        minHeight: '100vh',
+        display: 'grid',
+        placeItems: 'center',
+        px: 2,
+        py: 4,
+      }}
+    >
+      <Box
+        sx={{
+          width: 'min(1180px, calc(100vw - 32px))',
+          display: 'grid',
+          gridTemplateColumns: { xs: '1fr', lg: '1.15fr 0.85fr' },
+          gap: 2.5,
+        }}
+      >
+        <Paper
+          elevation={0}
+          sx={{
+            p: { xs: 3, md: 4.5 },
+            borderRadius: 8,
+            border: '1px solid rgba(255,255,255,0.72)',
+            background:
+              'linear-gradient(145deg, rgba(22,53,69,0.94) 0%, rgba(21,94,99,0.9) 50%, rgba(200,107,42,0.86) 100%)',
+            color: '#fff',
+            overflow: 'hidden',
+          }}
+        >
+          <Stack spacing={3.25}>
+            <Box
+              sx={{
+                display: 'grid',
+                width: 58,
+                height: 58,
+                placeItems: 'center',
+                borderRadius: 4,
+                color: '#fff',
+                backgroundColor: 'rgba(255,255,255,0.14)',
+                border: '1px solid rgba(255,255,255,0.18)',
+              }}
+            >
+              <ShieldRoundedIcon />
+            </Box>
 
-      <section className="loginContainerBox" aria-labelledby="login-title">
-        <div className="login-card-glow" aria-hidden="true" />
-        <p className="login-eyebrow">Secure Access</p>
-        <h1 id="login-title">Login</h1>
-        <p className="login-subtitle">
-          {'\u6b22\u8fce\u56de\u6765\uff0c\u8f93\u5165\u8d26\u53f7\u5bc6\u7801\u7ee7\u7eed\u8fdb\u5165\u9879\u76ee\u3002'}
-        </p>
+            <div>
+              <Typography sx={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', opacity: 0.84 }}>
+                Secure Access
+              </Typography>
+              <Typography variant="h2" sx={{ mt: 1.5, maxWidth: 520, color: '#fff' }}>
+                进入这个更完整的 React 页面样机
+              </Typography>
+              <Typography sx={{ mt: 1.5, maxWidth: 560, lineHeight: 1.9, color: 'rgba(255,255,255,0.76)' }}>
+                登录页也被纳入统一视觉系统，左侧负责建立氛围与信息预期，右侧负责快速完成表单动作。这样页面不只是可用，也更像一个真正的产品入口。
+              </Typography>
+            </div>
 
-        <form aria-busy={isSubmitting} data-submit-status={submitStatus} noValidate onSubmit={submitForm}>
-          {loginFields.map((field) => {
-            const error = errors[field.name]
+            <Stack spacing={1.25}>
+              {[
+                '统一主题、导航、卡片与表单风格',
+                '保留 TypeScript 的状态与输入约束',
+                '适合继续接入真实鉴权与接口请求',
+              ].map((item) => (
+                <Box
+                  key={item}
+                  sx={{
+                    px: 1.75,
+                    py: 1.35,
+                    borderRadius: 3.5,
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                  }}
+                >
+                  <Typography sx={{ fontWeight: 700 }}>{item}</Typography>
+                </Box>
+              ))}
+            </Stack>
+          </Stack>
+        </Paper>
 
-            return (
-              <div className={`login-field${error ? ' login-field--error' : ''}`} key={field.name}>
-                <label htmlFor={field.id}>{field.label}</label>
-                <input
-                  aria-describedby={error ? `${field.id}-error` : undefined}
-                  aria-invalid={Boolean(error)}
-                  autoComplete={field.autoComplete}
-                  id={field.id}
-                  name={field.name}
-                  onChange={updateField(field.name)}
-                  placeholder={field.placeholder}
-                  type={field.type}
-                  value={formValues[field.name]}
+        <Paper
+          elevation={0}
+          sx={{
+            p: { xs: 3, md: 4 },
+            borderRadius: 8,
+            border: '1px solid rgba(255,255,255,0.72)',
+            background:
+              'linear-gradient(180deg, rgba(255,255,255,0.88) 0%, rgba(249,252,255,0.94) 100%)',
+          }}
+        >
+          <Stack spacing={2.5}>
+            <Box
+              sx={{
+                display: 'grid',
+                width: 56,
+                height: 56,
+                placeItems: 'center',
+                borderRadius: 4,
+                color: '#fff',
+                background: 'linear-gradient(135deg, #155e63, #c86b2a)',
+              }}
+            >
+              <LockRoundedIcon />
+            </Box>
+
+            <div>
+              <Typography color="primary.dark" sx={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
+                Login
+              </Typography>
+              <Typography variant="h3" sx={{ mt: 1 }}>
+                欢迎回来
+              </Typography>
+              <Typography color="text.secondary" sx={{ mt: 1.25, lineHeight: 1.8 }}>
+                输入账号和密码继续进入项目。当前表单已经统一到新的页面视觉语言，后续接真实登录接口会更自然。
+              </Typography>
+            </div>
+
+            <Box component="form" noValidate onSubmit={submitForm}>
+              <Stack spacing={2}>
+                <TextField
+                  label="账号"
+                  autoComplete="username"
+                  error={Boolean(errors.user)}
+                  helperText={errors.user}
+                  value={formValues.user}
+                  onChange={updateField('user')}
                 />
-                {error ? (
-                  <p className="login-field__error" id={`${field.id}-error`} role="alert">
-                    {error}
-                  </p>
+
+                <TextField
+                  label="密码"
+                  type="password"
+                  autoComplete="current-password"
+                  error={Boolean(errors.password)}
+                  helperText={errors.password}
+                  value={formValues.password}
+                  onChange={updateField('password')}
+                />
+
+                <Button disabled={isSubmitting} type="submit" variant="contained">
+                  {isSubmitting ? <CircularProgress color="inherit" size={18} sx={{ mr: 1 }} /> : null}
+                  {isSubmitting ? '登录中...' : '登录'}
+                </Button>
+
+                {submitStatus === 'success' ? (
+                  <Alert severity="success">登录信息已提交，正在进入首页。</Alert>
                 ) : null}
-              </div>
-            )
-          })}
 
-          <button className="login-submit-button" disabled={isSubmitting} type="submit">
-            {isSubmitting ? <span className="login-submit-button__spinner" aria-hidden="true" /> : null}
-            <span>{isSubmitting ? '\u767b\u5f55\u4e2d...' : '\u767b\u5f55'}</span>
-          </button>
-
-          {submitStatus === 'success' ? (
-            <p className="login-form-message login-form-message--success" role="status">
-              {'\u767b\u5f55\u4fe1\u606f\u5df2\u63d0\u4ea4\uff0c\u8bf7\u67e5\u770b\u63a7\u5236\u53f0\u3002'}
-            </p>
-          ) : null}
-
-          {submitStatus === 'error' ? (
-            <p className="login-form-message login-form-message--error" role="alert">
-              {'\u63d0\u4ea4\u5931\u8d25\uff0c\u8bf7\u7a0d\u540e\u91cd\u8bd5\u3002'}
-            </p>
-          ) : null}
-        </form>
-      </section>
-    </main>
+                {submitStatus === 'error' ? (
+                  <Alert severity="error">提交失败，请稍后重试。</Alert>
+                ) : null}
+              </Stack>
+            </Box>
+          </Stack>
+        </Paper>
+      </Box>
+    </Box>
   )
 }
 
