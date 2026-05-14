@@ -156,7 +156,7 @@ const MUIDemo = () => {
                   elevation={0}
                   sx={{
                     p: 2.5,
-                    borderRadius: 6,
+                    borderRadius: 3,
                     border: '1px solid rgba(15, 23, 42, 0.08)',
                     backgroundColor: 'rgba(15, 23, 42, 0.88)',
                     color: '#f8fafc',
