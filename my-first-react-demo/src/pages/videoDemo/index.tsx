@@ -1,7 +1,33 @@
+import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded'
+import FastForwardRoundedIcon from '@mui/icons-material/FastForwardRounded'
+import FastRewindRoundedIcon from '@mui/icons-material/FastRewindRounded'
+import MovieRoundedIcon from '@mui/icons-material/MovieRounded'
+import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded'
+import VolumeOffRoundedIcon from '@mui/icons-material/VolumeOffRounded'
+import VolumeUpRoundedIcon from '@mui/icons-material/VolumeUpRounded'
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardActionArea,
+  CardContent,
+  Chip,
+  Divider,
+  FormControlLabel,
+  Grid,
+  LinearProgress,
+  List,
+  ListItem,
+  ListItemText,
+  Paper,
+  Stack,
+  Switch,
+  Typography,
+} from '@mui/material'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
-import { Box, Button, Typography } from '@mui/material'
 import { HeroPanel, PageContainer, SectionPanel } from '../../components/pageScaffold'
-import './videoDemo.css'
+import './videoDemo.scss'
 
 type PresetVideo = {
   description: string
@@ -12,13 +38,7 @@ type PresetVideo = {
   title: string
 }
 
-type CurrentVideo = {
-  description: string
-  duration: string
-  src: string
-  tag: string
-  title: string
-}
+type CurrentVideo = Omit<PresetVideo, 'id'>
 
 const presetVideos: PresetVideo[] = [
   {
@@ -52,6 +72,12 @@ const featureCards = [
     label: '适合扩展',
     value: '课程回放、产品介绍、活动宣传、监控录像预览',
   },
+]
+
+const capabilityList = [
+  '直接使用浏览器原生 controls，接入成本低。',
+  '本地上传采用对象 URL 预览，便于继续接入真实上传流程。',
+  '切源时附带过渡遮罩，状态反馈更明确。',
 ]
 
 const VideoDemo = () => {
@@ -222,7 +248,7 @@ const VideoDemo = () => {
   }
 
   return (
-    <Box component="main" sx={{ minHeight: '100vh', py: { xs: 4, md: 6 } }}>
+    <Box component="main" className="video-demo-page" sx={{ minHeight: '100vh', py: { xs: 4, md: 6 } }}>
       <PageContainer>
         <HeroPanel
           className="video-demo-hero"
@@ -240,96 +266,242 @@ const VideoDemo = () => {
           )}
         />
 
-        <SectionPanel className="video-demo-stage" kicker="Player" title="视频播放器">
-          <div className="video-demo-layout">
-            <article className="video-player-card">
-              <div className="video-player-card__header">
-                <div>
-                  <span className="video-chip">{currentVideo.tag}</span>
-                  <h3>{currentVideo.title}</h3>
-                </div>
-                <span className="video-duration">{currentVideo.duration}</span>
-              </div>
-
-              <div className={`video-frame${isSwitchingSource ? ' is-switching' : ''}`}>
-                <video
-                  ref={videoRef}
-                  autoPlay={autoplay}
-                  className="video-frame__player"
-                  controls
-                  muted={muted}
-                  onCanPlay={handleVideoLoaded}
-                  onError={handleVideoError}
-                  onLoadStart={handleVideoLoadStart}
-                  onLoadedData={handleVideoLoaded}
-                  playsInline
-                  preload="metadata"
-                >
-                  <source src={currentVideo.src} type="video/mp4" />
-                  当前浏览器不支持 video 标签播放。
-                </video>
-                <div
-                  aria-hidden={!isSwitchingSource}
-                  className={`video-frame__overlay${isSwitchingSource ? ' is-visible' : ''}`}
-                >
-                  <span className="video-frame__overlay-badge">切换片源中</span>
-                  <strong>{currentVideo.title}</strong>
-                  <div className="video-frame__overlay-loader" />
-                </div>
-              </div>
-
-              <p className="video-player-card__description">{currentVideo.description}</p>
-
-              <Box className="video-toolbar" sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.5 }}>
-                <Button variant="outlined" onClick={() => setAutoplay((current) => !current)}>
-                  {autoplay ? '关闭自动播放' : '开启自动播放'}
-                </Button>
-                <Button variant="outlined" onClick={() => setMuted((current) => !current)}>
-                  {muted ? '取消静音' : '切换静音'}
-                </Button>
-                <Button variant="outlined" onClick={handleReplay}>
-                  快退 5 秒
-                </Button>
-                <Button variant="outlined" onClick={handleFastForward}>
-                  快进 5 秒
-                </Button>
-              </Box>
-            </article>
-
-            <aside className="video-side-panel">
-              <div className="video-side-panel__section">
-                <Typography className="video-side-panel__title">示例片源</Typography>
-                <div className="video-source-list">
-                  {presetVideos.map((item) => (
-                    <button
-                      className={`video-source-card${localVideo === null && item.id === selectedPresetId ? ' is-active' : ''}`}
-                      key={item.id}
-                      onClick={() => handlePresetChange(item.id)}
-                      type="button"
+        <SectionPanel
+          className="video-demo-stage"
+          kicker="Player"
+          title="视频播放器"
+          description="左侧用于预览和控制，右侧用于选择片源、查看交互说明和上传本地视频。"
+        >
+          <Grid container spacing={2.5} className="video-demo-layout">
+            <Grid size={{ xs: 12, lg: 8 }}>
+              <Card className="video-player-card" elevation={0}>
+                <CardContent sx={{ p: { xs: 2.5, md: 3 } }}>
+                  <Stack spacing={2.5}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: { xs: 'column', md: 'row' },
+                        alignItems: { xs: 'flex-start', md: 'center' },
+                        justifyContent: 'space-between',
+                        gap: 1.5,
+                      }}
                     >
-                      <strong>{item.title}</strong>
-                      <span>{item.description}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+                      <Stack spacing={1}>
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                          <Chip className="video-chip" label={currentVideo.tag} color="primary" />
+                          <Chip className="video-duration" label={currentVideo.duration} variant="outlined" />
+                        </Box>
+                        <Box>
+                          <Typography variant="h4">{currentVideo.title}</Typography>
+                          <Typography color="text.secondary" sx={{ mt: 1, maxWidth: 720 }}>
+                            {currentVideo.description}
+                          </Typography>
+                        </Box>
+                      </Stack>
 
-              <div className="video-side-panel__section">
-                <Typography className="video-side-panel__title">本地视频预览</Typography>
-                <label className="video-upload-card" htmlFor="video-upload-input">
-                  <span>选择本地 mp4 / webm / ogg 文件</span>
-                  <small>适合做上传前预览，后续可接入 OSS、S3 或业务后台。</small>
-                </label>
-                <input
-                  accept="video/mp4,video/webm,video/ogg"
-                  className="video-upload-input"
-                  id="video-upload-input"
-                  onChange={handleUpload}
-                  type="file"
-                />
-              </div>
-            </aside>
-          </div>
+                      <Paper className="video-status-card" elevation={0}>
+                        <Stack spacing={1}>
+                          <Typography variant="overline" color="primary.dark">
+                            当前状态
+                          </Typography>
+                          <Typography variant="body2" color="text.secondary">
+                            {isSwitchingSource ? '片源切换中，播放器正在重新加载。' : '播放器已就绪，可继续预览或切换控制项。'}
+                          </Typography>
+                        </Stack>
+                      </Paper>
+                    </Box>
+
+                    <div className={`video-frame${isSwitchingSource ? ' is-switching' : ''}`}>
+                      <video
+                        ref={videoRef}
+                        autoPlay={autoplay}
+                        className="video-frame__player"
+                        controls
+                        muted={muted}
+                        onCanPlay={handleVideoLoaded}
+                        onError={handleVideoError}
+                        onLoadStart={handleVideoLoadStart}
+                        onLoadedData={handleVideoLoaded}
+                        playsInline
+                        preload="metadata"
+                      >
+                        <source src={currentVideo.src} type="video/mp4" />
+                        当前浏览器不支持 video 标签播放。
+                      </video>
+
+                      <div
+                        aria-hidden={!isSwitchingSource}
+                        className={`video-frame__overlay${isSwitchingSource ? ' is-visible' : ''}`}
+                      >
+                        <Chip className="video-frame__overlay-badge" label="切换片源中" />
+                        <strong>{currentVideo.title}</strong>
+                        <div className="video-frame__overlay-loader" />
+                      </div>
+                    </div>
+
+                    {isSwitchingSource ? <LinearProgress color="primary" /> : null}
+
+                    <Grid container spacing={1.5}>
+                      <Grid size={{ xs: 12, md: 6 }}>
+                        <Paper className="video-control-card" elevation={0}>
+                          <Stack spacing={1.25}>
+                            <Typography variant="subtitle1">播放偏好</Typography>
+                            <FormControlLabel
+                              control={(
+                                <Switch
+                                  checked={autoplay}
+                                  color="primary"
+                                  onChange={() => setAutoplay((current) => !current)}
+                                />
+                              )}
+                              label={autoplay ? '自动播放已开启' : '自动播放已关闭'}
+                            />
+                            <FormControlLabel
+                              control={(
+                                <Switch
+                                  checked={muted}
+                                  color="primary"
+                                  onChange={() => setMuted((current) => !current)}
+                                />
+                              )}
+                              label={muted ? '默认静音播放' : '默认带声音播放'}
+                            />
+                          </Stack>
+                        </Paper>
+                      </Grid>
+
+                      <Grid size={{ xs: 12, md: 6 }}>
+                        <Paper className="video-control-card" elevation={0}>
+                          <Stack spacing={1.25}>
+                            <Typography variant="subtitle1">快捷控制</Typography>
+                            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1.25 }}>
+                              <Button
+                                variant="outlined"
+                                startIcon={<FastRewindRoundedIcon />}
+                                onClick={handleReplay}
+                              >
+                                快退 5 秒
+                              </Button>
+                              <Button
+                                variant="outlined"
+                                startIcon={<FastForwardRoundedIcon />}
+                                onClick={handleFastForward}
+                              >
+                                快进 5 秒
+                              </Button>
+                              <Button
+                                variant={muted ? 'outlined' : 'contained'}
+                                color={muted ? 'inherit' : 'primary'}
+                                startIcon={muted ? <VolumeOffRoundedIcon /> : <VolumeUpRoundedIcon />}
+                                onClick={() => setMuted((current) => !current)}
+                              >
+                                {muted ? '取消静音' : '切换静音'}
+                              </Button>
+                            </Box>
+                          </Stack>
+                        </Paper>
+                      </Grid>
+                    </Grid>
+                  </Stack>
+                </CardContent>
+              </Card>
+            </Grid>
+
+            <Grid size={{ xs: 12, lg: 4 }}>
+              <Stack spacing={2.5} className="video-side-panel">
+                <Card className="video-side-card" elevation={0}>
+                  <CardContent sx={{ p: 0 }}>
+                    <Stack spacing={2}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                      <MovieRoundedIcon color="primary" />
+                      <Typography variant="h6">示例片源</Typography>
+                      </Box>
+
+                      <List disablePadding className="video-source-list">
+                        {presetVideos.map((item) => {
+                          const isActive = localVideo === null && item.id === selectedPresetId
+
+                          return (
+                            <ListItem disablePadding key={item.id}>
+                              <Card className={`video-source-card${isActive ? ' is-active' : ''}`} elevation={0}>
+                                <CardActionArea onClick={() => handlePresetChange(item.id)}>
+                                  <CardContent sx={{ p: 2 }}>
+                                    <Stack spacing={1.25}>
+                                      <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
+                                        <Typography variant="subtitle1">{item.title}</Typography>
+                                        <Chip label={item.duration} size="small" variant="outlined" />
+                                      </Box>
+                                      <Typography variant="body2" color="text.secondary">
+                                        {item.description}
+                                      </Typography>
+                                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                                        <Chip label={item.tag} size="small" color={isActive ? 'primary' : 'default'} />
+                                        {isActive ? <Chip label="当前播放" size="small" color="success" /> : null}
+                                      </Box>
+                                    </Stack>
+                                  </CardContent>
+                                </CardActionArea>
+                              </Card>
+                            </ListItem>
+                          )
+                        })}
+                      </List>
+                    </Stack>
+                  </CardContent>
+                </Card>
+
+                <Card className="video-side-card" elevation={0}>
+                  <CardContent>
+                    <Stack spacing={2}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <PlayCircleOutlineRoundedIcon color="primary" />
+                        <Typography variant="h6">使用建议</Typography>
+                      </Box>
+                      <Alert severity="info" variant="outlined">
+                        这页更适合演示播放器接入、试看页或课程回放原型，不建议直接当成生产播放器。
+                      </Alert>
+                      <List disablePadding>
+                        {capabilityList.map((item) => (
+                          <ListItem key={item} disableGutters>
+                            <ListItemText primary={item} />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </Stack>
+                  </CardContent>
+                </Card>
+
+                <Card className="video-side-card" elevation={0}>
+                  <CardContent>
+                    <Stack spacing={2}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                        <CloudUploadRoundedIcon color="primary" />
+                        <Typography variant="h6">本地视频预览</Typography>
+                      </Box>
+                      <Typography color="text.secondary" variant="body2">
+                        选择本地 mp4 / webm / ogg 文件，适合做上传前预览，后续可继续接入 OSS、S3 或业务后台。
+                      </Typography>
+                      <Button component="label" variant="contained" startIcon={<CloudUploadRoundedIcon />}>
+                        选择本地视频
+                        <input
+                          accept="video/mp4,video/webm,video/ogg"
+                          className="video-upload-input"
+                          id="video-upload-input"
+                          onChange={handleUpload}
+                          type="file"
+                        />
+                      </Button>
+                      <Divider />
+                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+                        <Chip label={localVideo ? '已加载本地文件' : '当前使用内置片源'} color={localVideo ? 'success' : 'default'} />
+                        <Chip label={autoplay ? '自动播放' : '手动播放'} variant="outlined" />
+                      </Box>
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Stack>
+            </Grid>
+          </Grid>
         </SectionPanel>
       </PageContainer>
     </Box>
