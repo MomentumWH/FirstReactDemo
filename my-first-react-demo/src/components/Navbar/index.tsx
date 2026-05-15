@@ -30,8 +30,9 @@ const Navbar = () => {
           width: 'min(1680px, calc(100vw - clamp(64px, calc(4vw + 40px), 88px)))',
           mx: 'auto',
           borderRadius: 8,
-          border: '1px solid rgba(255,255,255,0.72)',
-          backgroundColor: 'rgba(255,251,248,0.7)',
+          border: '1px solid rgba(255, 255, 255, 0.08)',
+          backgroundColor: 'rgba(12, 12, 14, 0.72)',
+          backdropFilter: 'blur(18px)',
         }}
       >
         <Toolbar sx={{ minHeight: 92, display: 'flex', gap: 2.5, justifyContent: 'space-between', flexWrap: 'wrap' }}>
@@ -44,16 +45,16 @@ const Navbar = () => {
                 placeItems: 'center',
                 borderRadius: 4,
                 color: '#fff',
-                background: 'linear-gradient(135deg, #155e63, #c86b2a)',
-                boxShadow: '0 16px 32px rgba(21, 94, 99, 0.28)',
+                background: 'linear-gradient(135deg, #ffffff 0%, #ff8a1f 100%)',
+                boxShadow: '0 16px 32px rgba(255, 138, 31, 0.26)',
               }}
             >
               <DashboardRoundedIcon />
             </Box>
             <Box sx={{ minWidth: 0, display: 'inline-block', verticalAlign: 'middle', ml: 1.5 }}>
-              <Typography sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>Router Atelier</Typography>
+              <Typography sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>NEON ROUTER</Typography>
               <Typography color="text.secondary" sx={{ fontSize: 13 }}>
-                Editorial MUI Workspace
+                Black / White / Orange Tech UI
               </Typography>
             </Box>
           </Box>
@@ -80,11 +81,11 @@ const Navbar = () => {
                     variant={isActive ? 'contained' : 'text'}
                     sx={{
                       px: 2.25,
-                      color: isActive ? '#fff' : 'text.secondary',
-                      backgroundColor: isActive ? 'text.primary' : 'transparent',
-                      border: isActive ? '1px solid transparent' : `1px solid ${alpha('#1f2430', 0.08)}`,
+                      color: isActive ? '#050505' : 'text.secondary',
+                      backgroundColor: isActive ? 'primary.main' : 'transparent',
+                      border: isActive ? '1px solid transparent' : `1px solid ${alpha('#ffffff', 0.08)}`,
                       '&:hover': {
-                        backgroundColor: isActive ? 'text.primary' : alpha('#ffffff', 0.72),
+                        backgroundColor: isActive ? 'primary.light' : alpha('#ff8a1f', 0.08),
                       },
                     }}
                   >
@@ -98,7 +99,7 @@ const Navbar = () => {
               <Chip
                 icon={<PersonRoundedIcon />}
                 label={userInfo?.user || '用户'}
-                sx={{ borderRadius: 999, px: 1, backgroundColor: 'rgba(255,255,255,0.92)' }}
+                sx={{ borderRadius: 999, px: 1, backgroundColor: 'rgba(255,255,255,0.06)' }}
               />
               <Button
                 color="secondary"

@@ -20,7 +20,6 @@ import {
   Grid,
   LinearProgress,
   MenuItem,
-  Paper,
   Snackbar,
   Stack,
   Switch,
@@ -32,7 +31,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
-import { PageContainer } from '../../components/pageScaffold'
+import { HeroPanel, PageContainer, SectionPanel } from '../../components/pageScaffold'
 
 type LaunchStatus = 'Draft' | 'Review' | 'Ready'
 
@@ -55,20 +54,20 @@ const statusTone: Record<LaunchStatus, 'default' | 'warning' | 'success'> = {
   Ready: 'success',
 }
 
-const metricCards = [
+const featureCards = [
   {
     title: 'ThemeProvider',
-    description: '统一颜色、圆角、字体和组件默认行为。',
+    description: '统一颜色、圆角、字重和组件默认行为，让整套页面语气保持一致。',
     icon: <AutoAwesomeRoundedIcon fontSize="small" />,
   },
   {
     title: 'Layout + Surface',
-    description: '用 Container、Grid、Paper、Card 快速搭出页面骨架。',
+    description: '用 Container、Grid、Paper 和 Card 重新组织页面层级，保持强对比结构。',
     icon: <InsightsRoundedIcon fontSize="small" />,
   },
   {
     title: 'Form + Feedback',
-    description: '用 TextField、Dialog、Snackbar 处理输入与交互反馈。',
+    description: '把 TextField、Dialog、Snackbar 和表格放进同一套高密度交互语境里。',
     icon: <RocketLaunchRoundedIcon fontSize="small" />,
   },
 ]
@@ -87,249 +86,216 @@ const MUIDemo = () => {
   return (
     <Box component="main" sx={{ minHeight: '100vh', py: { xs: 4, md: 6 } }}>
       <PageContainer>
-        <Paper
-          elevation={0}
-          sx={{
-            position: 'relative',
-            overflow: 'hidden',
-            p: { xs: 3, md: 5 },
-            border: '1px solid rgba(15, 118, 110, 0.14)',
-            background:
-              'linear-gradient(140deg, rgba(255,255,255,0.92) 0%, rgba(233,247,243,0.95) 55%, rgba(255,244,235,0.94) 100%)',
-          }}
+        <HeroPanel
+          kicker="MUI Demo"
+          title="把 MUI 基础组件统一进同一套黑白橙界面语言"
+          description="这个 demo 不再展示默认样式，而是把按钮、表单、弹窗、表格和反馈统一到和首页一致的科技中控台语气里。"
+          metrics={[
+            { label: 'Theme', value: '颜色、圆角、阴影与间距已同步到全局视觉系统。' },
+            { label: 'Layout', value: '页面结构按 Hero / Section 的节奏重新组织。' },
+            { label: 'Feedback', value: 'Dialog、Snackbar 与表格状态保留真实交互能力。' },
+          ]}
+          actions={(
+            <>
+              <Button variant="contained" onClick={() => setDialogOpen(true)}>
+                查看提交流程
+              </Button>
+              <Button color="secondary" variant="outlined" onClick={() => setSnackbarOpen(true)}>
+                触发消息提示
+              </Button>
+            </>
+          )}
+          side={(
+            <Stack spacing={1.5}>
+              <Typography color="text.secondary" sx={{ fontSize: 13, fontWeight: 800, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                Board Status
+              </Typography>
+              <Typography variant="h5">组件层级、表单和反馈已经对齐到同一风格</Typography>
+              <Typography color="text.secondary" sx={{ lineHeight: 1.8 }}>
+                这页保留最常见的 MUI 用法，但把呈现方式切到更像真实后台的高对比模式。
+              </Typography>
+              <LinearProgress color="secondary" value={checklistCompletion} variant="determinate" sx={{ height: 10, borderRadius: 999 }} />
+              <Typography color="text.secondary">
+                当前模板完成度 {Math.round(checklistCompletion)}%
+              </Typography>
+            </Stack>
+          )}
+        />
+
+        <SectionPanel
+          kicker="Components"
+          title="基础组件卡片"
+          description="这里把最常用的组合方式以统一卡片风格重新展示。"
         >
-          <Box
-            sx={{
-              position: 'absolute',
-              top: -64,
-              right: -32,
-              width: 220,
-              height: 220,
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(20,184,166,0.22), transparent 70%)',
-            }}
-          />
-
-          <Grid container spacing={3} sx={{ alignItems: 'center' }}>
-            <Grid size={{ xs: 12, md: 7 }}>
-              <Stack spacing={2}>
-                <Chip color="primary" label="Material UI Demo Template" sx={{ width: 'fit-content', fontWeight: 700 }} />
-                <Typography variant="h3" component="h1">
-                  用一页把 MUI 的常见用法串起来
-                </Typography>
-                <Typography color="text.secondary" sx={{ maxWidth: 680, fontSize: 17, lineHeight: 1.75 }}>
-                  这个模板演示的是 MUI 在真实页面里的基础组合方式：先用主题统一风格，再用布局组件组织结构，最后接入表单、表格和反馈组件完成业务交互。
-                </Typography>
-                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5}>
-                  <Button color="primary" variant="contained" onClick={() => setDialogOpen(true)}>
-                    查看提交流程
-                  </Button>
-                  <Button color="secondary" variant="outlined" onClick={() => setSnackbarOpen(true)}>
-                    触发消息提示
-                  </Button>
-                </Stack>
-              </Stack>
-            </Grid>
-
-            <Grid size={{ xs: 12, md: 5 }}>
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 2.5,
-                  borderRadius: 3,
-                  border: '1px solid rgba(15, 23, 42, 0.08)',
-                  backgroundColor: 'rgba(15, 23, 42, 0.88)',
-                  color: '#f8fafc',
-                }}
-              >
-                <Stack spacing={2}>
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                    <Avatar sx={{ bgcolor: 'secondary.main', color: '#fff' }}>M</Avatar>
-                    <Box>
-                      <Typography sx={{ fontWeight: 700 }}>MUI Starter Board</Typography>
-                      <Typography variant="body2" sx={{ color: 'rgba(248,250,252,0.72)' }}>
-                        页面结构、表单和反馈已经准备好。
+          <Grid container spacing={3}>
+            {featureCards.map((item) => (
+              <Grid key={item.title} size={{ xs: 12, md: 4 }}>
+                <Card
+                  elevation={0}
+                  sx={{
+                    height: '100%',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    borderRadius: 3,
+                    background: 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
+                  }}
+                >
+                  <CardContent>
+                    <Stack spacing={1.5}>
+                      <Avatar sx={{ bgcolor: 'primary.main', width: 42, height: 42 }}>{item.icon}</Avatar>
+                      <Typography variant="h6">{item.title}</Typography>
+                      <Typography color="text.secondary" sx={{ lineHeight: 1.75 }}>
+                        {item.description}
                       </Typography>
-                    </Box>
-                  </Stack>
-                  <Divider sx={{ borderColor: 'rgba(248,250,252,0.12)' }} />
-                  <Typography variant="body2" sx={{ color: 'rgba(248,250,252,0.82)' }}>
-                    主题完成度
-                  </Typography>
-                  <LinearProgress
-                    color="secondary"
-                    value={checklistCompletion}
-                    variant="determinate"
-                    sx={{ height: 10, borderRadius: 999 }}
-                  />
-                  <Typography variant="body2" sx={{ color: 'rgba(248,250,252,0.72)' }}>
-                    当前模板平均进度 {Math.round(checklistCompletion)}%
-                  </Typography>
-                </Stack>
-              </Paper>
-            </Grid>
+                    </Stack>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
-        </Paper>
+        </SectionPanel>
 
-        <Grid container spacing={3}>
-          {metricCards.map((item) => (
-            <Grid key={item.title} size={{ xs: 12, md: 4 }}>
+        <SectionPanel
+          kicker="Flow"
+          title="表单、弹窗与数据"
+          description="同一页面里把输入、确认和列表三类核心交互串起来。"
+        >
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 12, lg: 5 }}>
               <Card
                 elevation={0}
                 sx={{
                   height: '100%',
-                  border: '1px solid rgba(15, 23, 42, 0.08)',
-                  backgroundColor: 'rgba(255,255,255,0.84)',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: 3,
+                  background: 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
                 }}
               >
                 <CardContent>
-                  <Stack spacing={1.5}>
-                    <Avatar sx={{ bgcolor: 'primary.main', width: 42, height: 42 }}>{item.icon}</Avatar>
-                    <Typography variant="h6">{item.title}</Typography>
-                    <Typography color="text.secondary" sx={{ lineHeight: 1.7 }}>
-                      {item.description}
-                    </Typography>
+                  <Stack spacing={2.5}>
+                    <div>
+                      <Typography variant="h5">Create Starter Task</Typography>
+                      <Typography color="text.secondary" sx={{ mt: 0.75 }}>
+                        用最常见的 MUI 表单组件拼出一个干净的任务录入面板。
+                      </Typography>
+                    </div>
+
+                    <TextField
+                      label="Project Name"
+                      value={formData.projectName}
+                      onChange={(event) =>
+                        setFormData((current) => ({
+                          ...current,
+                          projectName: event.target.value,
+                        }))
+                      }
+                    />
+
+                    <TextField
+                      select
+                      label="Category"
+                      value={formData.category}
+                      onChange={(event) =>
+                        setFormData((current) => ({
+                          ...current,
+                          category: event.target.value,
+                        }))
+                      }
+                    >
+                      <MenuItem value="dashboard">Dashboard</MenuItem>
+                      <MenuItem value="form">Form</MenuItem>
+                      <MenuItem value="detail">Detail</MenuItem>
+                    </TextField>
+
+                    <FormControlLabel
+                      control={(
+                        <Switch
+                          checked={formData.notifyTeam}
+                          onChange={(event) =>
+                            setFormData((current) => ({
+                              ...current,
+                              notifyTeam: event.target.checked,
+                            }))
+                          }
+                        />
+                      )}
+                      label="提交后通知协作成员"
+                    />
+                  </Stack>
+                </CardContent>
+                <CardActions sx={{ px: 3, pb: 3 }}>
+                  <Button variant="contained" onClick={() => setDialogOpen(true)}>
+                    打开确认弹窗
+                  </Button>
+                  <Button variant="text" onClick={() => setSnackbarOpen(true)}>
+                    模拟保存
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+
+            <Grid size={{ xs: 12, lg: 7 }}>
+              <Card
+                elevation={0}
+                sx={{
+                  height: '100%',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  borderRadius: 3,
+                  background: 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
+                }}
+              >
+                <CardContent>
+                  <Stack spacing={2}>
+                    <div>
+                      <Typography variant="h5">数据列表模板</Typography>
+                      <Typography color="text.secondary" sx={{ mt: 0.75 }}>
+                        适合继续扩展成管理后台里的任务、项目或审批列表。
+                      </Typography>
+                    </div>
+
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>模块</TableCell>
+                          <TableCell>负责人</TableCell>
+                          <TableCell align="right">进度</TableCell>
+                          <TableCell align="right">状态</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {checklist.map((row) => (
+                          <TableRow key={row.label} hover>
+                            <TableCell>{row.label}</TableCell>
+                            <TableCell>{row.owner}</TableCell>
+                            <TableCell align="right">{row.progress}%</TableCell>
+                            <TableCell align="right">
+                              <Chip
+                                color={statusTone[row.status]}
+                                label={row.status}
+                                size="small"
+                                variant={row.status === 'Draft' ? 'outlined' : 'filled'}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </Stack>
                 </CardContent>
               </Card>
             </Grid>
-          ))}
-        </Grid>
-
-        <Grid container spacing={3}>
-          <Grid size={{ xs: 12, lg: 5 }}>
-            <Card
-              elevation={0}
-              sx={{
-                height: '100%',
-                border: '1px solid rgba(15, 23, 42, 0.08)',
-                backgroundColor: 'rgba(255,255,255,0.86)',
-              }}
-            >
-              <CardContent>
-                <Stack spacing={2.5}>
-                  <div>
-                    <Typography variant="h5">表单模板</Typography>
-                    <Typography color="text.secondary" sx={{ mt: 0.75 }}>
-                      这里展示的是最常见的表单录入场景。
-                    </Typography>
-                  </div>
-
-                  <TextField
-                    label="项目名称"
-                    value={formData.projectName}
-                    onChange={(event) =>
-                      setFormData((current) => ({
-                        ...current,
-                        projectName: event.target.value,
-                      }))
-                    }
-                  />
-
-                  <TextField
-                    select
-                    label="页面类型"
-                    value={formData.category}
-                    onChange={(event) =>
-                      setFormData((current) => ({
-                        ...current,
-                        category: event.target.value,
-                      }))
-                    }
-                  >
-                    <MenuItem value="dashboard">Dashboard</MenuItem>
-                    <MenuItem value="form">Form</MenuItem>
-                    <MenuItem value="detail">Detail</MenuItem>
-                  </TextField>
-
-                  <FormControlLabel
-                    control={(
-                      <Switch
-                        checked={formData.notifyTeam}
-                        onChange={(event) =>
-                          setFormData((current) => ({
-                            ...current,
-                            notifyTeam: event.target.checked,
-                          }))
-                        }
-                      />
-                    )}
-                    label="提交后通知协作成员"
-                  />
-                </Stack>
-              </CardContent>
-              <CardActions sx={{ px: 3, pb: 3 }}>
-                <Button variant="contained" onClick={() => setDialogOpen(true)}>
-                  打开确认弹窗
-                </Button>
-                <Button variant="text" onClick={() => setSnackbarOpen(true)}>
-                  模拟保存
-                </Button>
-              </CardActions>
-            </Card>
           </Grid>
-
-          <Grid size={{ xs: 12, lg: 7 }}>
-            <Card
-              elevation={0}
-              sx={{
-                height: '100%',
-                border: '1px solid rgba(15, 23, 42, 0.08)',
-                backgroundColor: 'rgba(255,255,255,0.86)',
-              }}
-            >
-              <CardContent>
-                <Stack spacing={2}>
-                  <div>
-                    <Typography variant="h5">数据列表模板</Typography>
-                    <Typography color="text.secondary" sx={{ mt: 0.75 }}>
-                      MUI 的表格适合后台管理类页面快速搭建。
-                    </Typography>
-                  </div>
-
-                  <Table size="small">
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>模块</TableCell>
-                        <TableCell>负责人</TableCell>
-                        <TableCell>进度</TableCell>
-                        <TableCell align="right">状态</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {checklist.map((row) => (
-                        <TableRow key={row.label} hover>
-                          <TableCell>{row.label}</TableCell>
-                          <TableCell>{row.owner}</TableCell>
-                          <TableCell>{row.progress}%</TableCell>
-                          <TableCell align="right">
-                            <Chip
-                              color={statusTone[row.status]}
-                              label={row.status}
-                              size="small"
-                              variant={row.status === 'Draft' ? 'outlined' : 'filled'}
-                            />
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </Stack>
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
+        </SectionPanel>
       </PageContainer>
 
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} fullWidth maxWidth="sm">
         <DialogTitle>组件库的典型使用流程</DialogTitle>
         <DialogContent dividers>
           <Stack spacing={1.25}>
-            <Typography>1. 安装依赖：`@mui/material`、`@emotion/react`、`@emotion/styled`。</Typography>
+            <Typography>1. 安装 `@mui/material`、`@emotion/react`、`@emotion/styled`。</Typography>
             <Typography>2. 在入口挂 `ThemeProvider` 和 `CssBaseline`。</Typography>
-            <Typography>3. 页面里优先用 `Container`、`Grid`、`Stack`、`Box` 搭布局。</Typography>
+            <Typography>3. 页面优先用 `Container`、`Grid`、`Stack`、`Box` 搭结构。</Typography>
             <Typography>4. 再接入 `Button`、`Card`、`TextField`、`Dialog` 等业务组件。</Typography>
-            <Typography>5. 最后把颜色、间距、圆角沉淀到 theme，避免页面里到处重复写样式。</Typography>
+            <Typography>5. 最后把颜色、间距和圆角沉淀到 theme 里。</Typography>
           </Stack>
         </DialogContent>
         <DialogActions sx={{ px: 3, py: 2 }}>
@@ -353,7 +319,7 @@ const MUIDemo = () => {
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
         <Alert severity="success" variant="filled" onClose={() => setSnackbarOpen(false)}>
-          MUI 示例交互已触发。
+          MUI demo interaction triggered.
         </Alert>
       </Snackbar>
     </Box>

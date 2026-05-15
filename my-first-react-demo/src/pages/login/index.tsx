@@ -135,7 +135,7 @@ const Login = () => {
           elevation={0}
           sx={{
             p: { xs: 3, md: 4.5 },
-            borderRadius: 8,
+            borderRadius: 3,
             border: '1px solid rgba(255,255,255,0.72)',
             background:
               'linear-gradient(145deg, rgba(22,53,69,0.94) 0%, rgba(21,94,99,0.9) 50%, rgba(200,107,42,0.86) 100%)',
@@ -150,7 +150,7 @@ const Login = () => {
                 width: 58,
                 height: 58,
                 placeItems: 'center',
-                borderRadius: 4,
+                borderRadius: 3,
                 color: '#fff',
                 backgroundColor: 'rgba(255,255,255,0.14)',
                 border: '1px solid rgba(255,255,255,0.18)',
@@ -179,13 +179,13 @@ const Login = () => {
               ].map((item) => (
                 <Box
                   key={item}
-                  sx={{
-                    px: 1.75,
-                    py: 1.35,
-                    borderRadius: 3.5,
-                    backgroundColor: 'rgba(255,255,255,0.1)',
-                    border: '1px solid rgba(255,255,255,0.12)',
-                  }}
+                sx={{
+                  px: 1.75,
+                  py: 1.35,
+                  borderRadius: 3,
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  border: '1px solid rgba(255,255,255,0.12)',
+                }}
                 >
                   <Typography sx={{ fontWeight: 700 }}>{item}</Typography>
                 </Box>
@@ -198,7 +198,7 @@ const Login = () => {
           elevation={0}
           sx={{
             p: { xs: 3, md: 4 },
-            borderRadius: 8,
+            borderRadius: 3,
             border: '1px solid rgba(255,255,255,0.72)',
             background:
               'linear-gradient(180deg, rgba(255,255,255,0.88) 0%, rgba(249,252,255,0.94) 100%)',
@@ -211,7 +211,7 @@ const Login = () => {
                 width: 56,
                 height: 56,
                 placeItems: 'center',
-                borderRadius: 4,
+                borderRadius: 3,
                 color: '#fff',
                 background: 'linear-gradient(135deg, #155e63, #c86b2a)',
               }}

@@ -71,41 +71,53 @@ export const HeroPanel = ({
       sx={[
         {
           position: 'relative',
-          overflow: 'hidden',
-          p: { xs: 3, md: 5.5 },
-          border: '1px solid rgba(21, 94, 99, 0.14)',
-          borderRadius: 9,
+          overflow: 'visible',
+          p: { xs: 3.5, md: 6.5 },
+          border: '1px solid rgba(255, 138, 31, 0.18)',
+          borderRadius: 3,
           background:
-            'linear-gradient(135deg, rgba(255,252,248,0.95) 0%, rgba(248,251,252,0.96) 56%, rgba(255,244,232,0.94) 100%)',
-          '&::before': {
-            position: 'absolute',
-            top: -80,
-            right: -40,
-            width: 280,
-            height: 280,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(76, 198, 195, 0.24) 0%, transparent 68%)',
-            content: '""',
-          },
-          '&::after': {
-            position: 'absolute',
-            bottom: -110,
-            left: -50,
-            width: 320,
-            height: 320,
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(240, 163, 87, 0.22) 0%, transparent 70%)',
-            content: '""',
-          },
+            'linear-gradient(135deg, rgba(9,9,10,0.94) 0%, rgba(15,15,18,0.96) 58%, rgba(31,18,10,0.94) 100%)',
         },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >
       <Box
+        aria-hidden="true"
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            overflow: 'hidden',
+            borderRadius: 'inherit',
+            pointerEvents: 'none',
+            '&::before': {
+              position: 'absolute',
+              top: -70,
+              right: -30,
+              width: 320,
+              height: 320,
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(255, 138, 31, 0.22) 0%, transparent 68%)',
+              content: '""',
+            },
+            '&::after': {
+              position: 'absolute',
+              bottom: -120,
+              left: -60,
+              width: 360,
+              height: 360,
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.07) 0%, transparent 72%)',
+              content: '""',
+            },
+          }}
+      />
+      <Box
         sx={{
+          position: 'relative',
+          zIndex: 1,
           display: 'grid',
           gridTemplateColumns: side ? { xs: '1fr', md: 'minmax(0, 1fr) 360px' } : '1fr',
-          gap: 3,
+          gap: { xs: 2.5, md: 3.5 },
           alignItems: 'end',
         }}
       >
@@ -165,7 +177,7 @@ export const HeroPanel = ({
                   sx={{
                     p: 2.25,
                     border: '1px solid rgba(21, 94, 99, 0.12)',
-                    borderRadius: 5,
+                    borderRadius: 3,
                     backgroundColor: 'rgba(255,255,255,0.66)',
                     backdropFilter: 'blur(14px)',
                   }}
@@ -187,21 +199,31 @@ export const HeroPanel = ({
             elevation={0}
             sx={{
               position: 'relative',
-              overflow: 'hidden',
-              p: 3,
-              borderRadius: 6,
-              border: '1px solid rgba(255,255,255,0.72)',
-              backgroundColor: 'rgba(255,255,255,0.68)',
-              boxShadow: '0 24px 48px rgba(23, 32, 51, 0.09)',
-              '&::before': {
-                position: 'absolute',
-                inset: 0,
-                background:
-                  'linear-gradient(180deg, rgba(255,255,255,0.32) 0%, rgba(255,255,255,0) 34%)',
-                content: '""',
-              },
+              overflow: 'visible',
+              p: { xs: 2.5, md: 3.5 },
+              borderRadius: 3,
+              border: '1px solid rgba(255,255,255,0.08)',
+              backgroundColor: 'rgba(255,255,255,0.04)',
+              boxShadow: '0 24px 48px rgba(0, 0, 0, 0.34)',
             }}
           >
+            <Box
+              aria-hidden="true"
+              sx={{
+                position: 'absolute',
+                inset: 0,
+                overflow: 'hidden',
+                borderRadius: 'inherit',
+                pointerEvents: 'none',
+                '&::before': {
+                  position: 'absolute',
+                  inset: 0,
+                  background:
+                    'linear-gradient(180deg, rgba(255,138,31,0.16) 0%, rgba(255,255,255,0) 36%)',
+                  content: '""',
+                },
+              }}
+            />
             <Box sx={{ position: 'relative', zIndex: 1 }}>{side}</Box>
           </Paper>
         ) : null}
@@ -216,27 +238,37 @@ export const SectionPanel = ({ children, className, description, kicker, sx, tit
       className={className}
       elevation={0}
       sx={[
-        {
-          position: 'relative',
-          overflow: 'hidden',
-          p: { xs: 3, md: 4.5 },
-          border: '1px solid rgba(148, 163, 184, 0.16)',
-          borderRadius: 7,
-          backgroundColor: 'rgba(255,255,255,0.84)',
-          '&::before': {
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 1,
-            background: 'linear-gradient(90deg, rgba(76, 198, 195, 0.4), rgba(240, 163, 87, 0.32), transparent)',
-            content: '""',
+          {
+            position: 'relative',
+            overflow: 'visible',
+            p: { xs: 3.25, md: 5 },
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            borderRadius: 3,
+            backgroundColor: 'rgba(255,255,255,0.04)',
           },
-        },
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >
-      <Stack spacing={2.5}>
+      <Box
+        aria-hidden="true"
+          sx={{
+            position: 'absolute',
+            inset: 0,
+            overflow: 'hidden',
+            borderRadius: 'inherit',
+            pointerEvents: 'none',
+            '&::before': {
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              height: 1,
+              background: 'linear-gradient(90deg, rgba(255, 138, 31, 0.6), rgba(255, 255, 255, 0.18), transparent)',
+              content: '""',
+            },
+          }}
+      />
+      <Stack spacing={2.5} sx={{ position: 'relative', zIndex: 1 }}>
         <div>
           <Typography color="primary.dark" sx={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase' }}>
             {kicker}
@@ -258,21 +290,21 @@ export const SectionPanel = ({ children, className, description, kicker, sx, tit
 
 export const InfoCard = ({ description, icon, title }: InfoCardProps) => {
   return (
-    <Card
+      <Card
       elevation={0}
-      sx={{
-        height: '100%',
-        border: '1px solid rgba(148, 163, 184, 0.14)',
-        borderRadius: 6,
-        background: 'linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(247,251,255,0.92) 100%)',
-        transition: 'transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          borderColor: 'rgba(21, 94, 99, 0.24)',
-          boxShadow: '0 28px 58px rgba(31, 36, 48, 0.12)',
-        },
-      }}
-    >
+        sx={{
+          height: '100%',
+          border: '1px solid rgba(255,255,255,0.08)',
+          borderRadius: 3,
+          background: 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
+          transition: 'transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease',
+          '&:hover': {
+            transform: 'translateY(-4px)',
+            borderColor: 'rgba(255, 138, 31, 0.3)',
+            boxShadow: '0 28px 58px rgba(0, 0, 0, 0.32)',
+          },
+        }}
+      >
       <Stack spacing={2} sx={{ p: 3 }}>
         <Box
           sx={{
@@ -280,9 +312,10 @@ export const InfoCard = ({ description, icon, title }: InfoCardProps) => {
             width: 56,
             height: 56,
             placeItems: 'center',
-            borderRadius: 3.5,
-            color: 'primary.dark',
-            backgroundColor: alpha('#155e63', 0.1),
+            borderRadius: 3,
+            color: '#ff8a1f',
+            backgroundColor: alpha('#ff8a1f', 0.14),
+            border: '1px solid rgba(255, 138, 31, 0.14)',
           }}
         >
           {icon}
