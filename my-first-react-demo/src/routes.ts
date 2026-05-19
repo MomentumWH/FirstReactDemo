@@ -1,13 +1,14 @@
 import { lazy } from 'react'
 import type { ComponentType, LazyExoticComponent } from 'react'
-import About from './pages/About'
-import Contact from './pages/Contact'
-import Home from './pages/Home'
-import Login from './pages/login'
 
+const Login = lazy(() => import('./pages/login'))
+const Home = lazy(() => import('./pages/Home'))
+const About = lazy(() => import('./pages/About'))
+const Contact = lazy(() => import('./pages/Contact'))
 const MUIDemo = lazy(() => import('./pages/muiDemo'))
 const TestDemo = lazy(() => import('./pages/testDemo'))
 const VideoDemo = lazy(() => import('./pages/videoDemo'))
+const StateComposeDemo = lazy(() => import('./pages/stateComposeDemo'))
 
 type RouteComponent = ComponentType | LazyExoticComponent<ComponentType>
 
@@ -31,21 +32,21 @@ export const appRoutes: AppRouteConfig[] = [
     access: 'protected',
     component: Home,
     icon: 'home',
-    label: '首页',
+    label: '棣栭〉',
     path: '/home',
   },
   {
     access: 'protected',
     component: About,
     icon: 'about',
-    label: '关于',
+    label: '鍏充簬',
     path: '/about',
   },
   {
     access: 'protected',
     component: Contact,
     icon: 'contact',
-    label: '联系',
+    label: '鑱旂郴',
     path: '/contact',
   },
   {
@@ -68,5 +69,12 @@ export const appRoutes: AppRouteConfig[] = [
     icon: 'video',
     label: 'Video Demo',
     path: '/videoDemo',
+  },
+  {
+    access: 'protected',
+    component: StateComposeDemo,
+    icon: 'state',
+    label: 'Compose Demo',
+    path: '/stateComposeDemo',
   },
 ]

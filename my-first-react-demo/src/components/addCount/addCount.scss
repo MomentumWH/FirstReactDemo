@@ -1,0 +1,20 @@
+.addCount{
+ background: lightgreen;
+  color:darkgray;
+  font-size: 24px;
+  width: 200px;
+  background: linear-gradient(45deg, rgb(182 211 250), rgb(237 169 169));
+  border-radius: 15px;
+ box-shadow:0 0 8px rgb(227 255 87 / 0.2) , /* outer shadow */
+ inset 4px 4px 10px rgb(255 151 151 / 0.3); /* inner shadow */;
+}
+.addCount:hover{
+ transform: scale(1.05);
+ box-shadow: 4px 4px 10px rgb(255 151 151 / 0.3), /* outer shadow */
+ inset 0 0 8px rgb(227 255 87 / 0.2); /* inner shadow */;
+ background: linear-gradient(45deg, rgb(237 169 169), rgb(182 211 250));
+}
+.addCountButtonBox{
+ width: 100%;
+ text-align: center;
+}

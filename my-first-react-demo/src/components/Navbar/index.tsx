@@ -1,10 +1,13 @@
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded'
 import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded'
+import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded'
+import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded'
 import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded'
 import FiberManualRecordRoundedIcon from '@mui/icons-material/FiberManualRecordRounded'
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded'
-import { AppBar, Box, Button, Chip, Paper, Toolbar, Typography } from '@mui/material'
+import { AppBar, Box, Button, Chip, IconButton, Paper, Toolbar, Typography } from '@mui/material'
 import { alpha } from '@mui/material/styles'
+import { useEffect, useRef, useState } from 'react'
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom'
 import { appRoutes } from '../../routes'
 import { useAuthStore } from '../../stores/auth'
@@ -14,13 +17,85 @@ const navItems = appRoutes.filter((route) => route.access === 'protected' && !ro
 const Navbar = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const navViewportRef = useRef<HTMLDivElement | null>(null)
   const userInfo = useAuthStore((state) => state.userInfo)
   const logout = useAuthStore((state) => state.logout)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
 
   const handleLogout = () => {
     logout()
     navigate('/', { replace: true })
   }
+
+  const updateScrollState = () => {
+    const element = navViewportRef.current
+
+    if (!element) {
+      return
+    }
+
+    const maxScrollLeft = element.scrollWidth - element.clientWidth
+
+    setCanScrollLeft(element.scrollLeft > 0)
+    setCanScrollRight(element.scrollLeft < maxScrollLeft - 1)
+  }
+
+  const handleScroll = (direction: 'left' | 'right') => {
+    const element = navViewportRef.current
+
+    if (!element) {
+      return
+    }
+
+    element.scrollBy({
+      behavior: 'smooth',
+      left: direction === 'left' ? -element.clientWidth : element.clientWidth,
+    })
+  }
+
+  useEffect(() => {
+    const element = navViewportRef.current
+
+    if (!element) {
+      return
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      updateScrollState()
+    })
+
+    const handleNativeScroll = () => {
+      updateScrollState()
+    }
+
+    resizeObserver.observe(element)
+    element.addEventListener('scroll', handleNativeScroll, { passive: true })
+    updateScrollState()
+
+    return () => {
+      resizeObserver.disconnect()
+      element.removeEventListener('scroll', handleNativeScroll)
+    }
+  }, [])
+
+  useEffect(() => {
+    const element = navViewportRef.current
+
+    if (!element) {
+      return
+    }
+
+    const activeItem = element.querySelector<HTMLElement>(`[data-route-path="${location.pathname}"]`)
+
+    activeItem?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'nearest',
+    })
+
+    updateScrollState()
+  }, [location.pathname])
 
   return (
     <AppBar color="transparent" position="sticky" sx={{ top: 0, pt: 2.5, px: { xs: 2, md: 4 }, zIndex: 20 }}>
@@ -35,8 +110,22 @@ const Navbar = () => {
           backdropFilter: 'blur(18px)',
         }}
       >
-        <Toolbar sx={{ minHeight: 92, display: 'flex', gap: 2.5, justifyContent: 'space-between', flexWrap: 'wrap' }}>
-          <Box component={RouterLink} to="/home" sx={{ minWidth: 0, display: 'flex', alignItems: 'center' }}>
+        <Toolbar
+          sx={{
+            minHeight: 92,
+            display: 'flex',
+            gap: 2.5,
+            justifyContent: 'space-between',
+            alignItems: { xs: 'stretch', xl: 'center' },
+            flexWrap: 'wrap',
+            py: 1.5,
+          }}
+        >
+          <Box
+            component={RouterLink}
+            to="/home"
+            sx={{ minWidth: 0, flexShrink: 0, display: 'flex', alignItems: 'center' }}
+          >
             <Box
               sx={{
                 display: 'grid',
@@ -62,50 +151,159 @@ const Navbar = () => {
           <Box
             sx={{
               display: 'flex',
-              flexDirection: { xs: 'column', md: 'row' },
-              gap: 1.25,
-              alignItems: { xs: 'stretch', md: 'center' },
+              flex: '1 1 820px',
+              width: { xs: '100%', xl: 'auto' },
+              minWidth: 0,
+              flexDirection: { xs: 'column', xl: 'row' },
+              gap: 1.5,
+              alignItems: { xs: 'stretch', xl: 'center' },
             }}
           >
-            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-              {navItems.map((item) => {
-                const isActive = location.pathname === item.path
+            <Box
+              sx={{
+                display: 'flex',
+                flex: '1 1 auto',
+                minWidth: 0,
+                width: '100%',
+                alignItems: 'center',
+                gap: 1,
+                overflow: 'hidden',
+              }}
+            >
+              <IconButton
+                aria-label="滚动导航向左"
+                disabled={!canScrollLeft}
+                onClick={() => handleScroll('left')}
+                sx={{
+                  flex: '0 0 auto',
+                  color: '#050505',
+                  border: '1px solid transparent',
+                  backgroundColor: 'primary.main',
+                  '&:hover': {
+                    backgroundColor: 'primary.light',
+                  },
+                  '&.Mui-disabled': {
+                    color: alpha('#050505', 0.45),
+                    backgroundColor: alpha('#ff8a1f', 0.4),
+                  },
+                }}
+              >
+                <ChevronLeftRoundedIcon />
+              </IconButton>
 
-                return (
-                  <Button
-                    key={item.path}
-                    component={RouterLink}
-                    to={item.path}
-                    color={isActive ? 'primary' : 'inherit'}
-                    startIcon={isActive ? <AutoAwesomeRoundedIcon /> : <FiberManualRecordRoundedIcon sx={{ fontSize: 10 }} />}
-                    variant={isActive ? 'contained' : 'text'}
-                    sx={{
-                      px: 2.25,
-                      color: isActive ? '#050505' : 'text.secondary',
-                      backgroundColor: isActive ? 'primary.main' : 'transparent',
-                      border: isActive ? '1px solid transparent' : `1px solid ${alpha('#ffffff', 0.08)}`,
-                      '&:hover': {
-                        backgroundColor: isActive ? 'primary.light' : alpha('#ff8a1f', 0.08),
-                      },
-                    }}
-                  >
-                    {item.label}
-                  </Button>
-                )
-              })}
+              <Box
+                ref={navViewportRef}
+                onScroll={updateScrollState}
+                sx={{
+                  flex: '1 1 auto',
+                  minWidth: 0,
+                  overflowX: 'auto',
+                  overflowY: 'hidden',
+                  display: 'flex',
+                  gap: 1,
+                  scrollBehavior: 'smooth',
+                  scrollSnapType: 'x mandatory',
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
+                  '&::-webkit-scrollbar': {
+                    display: 'none',
+                  },
+                }}
+              >
+                {navItems.map((item) => {
+                  const isActive = location.pathname === item.path
+
+                  return (
+                    <Button
+                      data-route-path={item.path}
+                      key={item.path}
+                      component={RouterLink}
+                      to={item.path}
+                      color={isActive ? 'primary' : 'inherit'}
+                      startIcon={isActive ? <AutoAwesomeRoundedIcon /> : <FiberManualRecordRoundedIcon sx={{ fontSize: 10 }} />}
+                      variant={isActive ? 'contained' : 'text'}
+                      sx={{
+                        flex: '0 0 clamp(150px, 24vw, 210px)',
+                        minWidth: '150px',
+                        maxWidth: '210px',
+                        justifyContent: 'center',
+                        px: 2,
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        scrollSnapAlign: 'start',
+                        color: isActive ? '#050505' : 'text.secondary',
+                        backgroundColor: isActive ? 'primary.main' : 'transparent',
+                        border: isActive ? '1px solid transparent' : `1px solid ${alpha('#ffffff', 0.08)}`,
+                        '&:hover': {
+                          backgroundColor: isActive ? 'primary.light' : alpha('#ff8a1f', 0.08),
+                        },
+                      }}
+                    >
+                      {item.label}
+                    </Button>
+                  )
+                })}
+              </Box>
+
+              <IconButton
+                aria-label="滚动导航向右"
+                disabled={!canScrollRight}
+                onClick={() => handleScroll('right')}
+                sx={{
+                  flex: '0 0 auto',
+                  color: '#050505',
+                  border: '1px solid transparent',
+                  backgroundColor: 'primary.main',
+                  '&:hover': {
+                    backgroundColor: 'primary.light',
+                  },
+                  '&.Mui-disabled': {
+                    color: alpha('#050505', 0.45),
+                    backgroundColor: alpha('#ff8a1f', 0.4),
+                  },
+                }}
+              >
+                <ChevronRightRoundedIcon />
+              </IconButton>
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                flex: '0 0 auto',
+                flexWrap: 'nowrap',
+                alignItems: 'center',
+                justifyContent: { xs: 'flex-end', xl: 'flex-start' },
+                gap: 1,
+                minWidth: 'fit-content',
+              }}
+            >
               <Chip
                 icon={<PersonRoundedIcon />}
                 label={userInfo?.user || '用户'}
-                sx={{ borderRadius: 999, px: 1, backgroundColor: 'rgba(255,255,255,0.06)' }}
+                sx={{
+                  maxWidth: 240,
+                  borderRadius: 999,
+                  px: 1,
+                  backgroundColor: 'rgba(255,255,255,0.06)',
+                  '& .MuiChip-label': {
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  },
+                }}
               />
               <Button
                 color="secondary"
                 variant="contained"
                 startIcon={<ExitToAppRoundedIcon />}
                 onClick={handleLogout}
+                sx={{
+                  flexShrink: 0,
+                  minWidth: 132,
+                  px: 2.5,
+                  whiteSpace: 'nowrap',
+                }}
               >
                 退出登录
               </Button>

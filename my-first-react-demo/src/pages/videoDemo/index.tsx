@@ -25,7 +25,7 @@ import {
   Switch,
   Typography,
 } from '@mui/material'
-import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import { ChangeEvent, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { HeroPanel, PageContainer, SectionPanel } from '../../components/pageScaffold'
 import './videoDemo.scss'
 
@@ -80,6 +80,130 @@ const capabilityList = [
   '切源时附带过渡遮罩，状态反馈更明确。',
 ]
 
+type VideoSourceListProps = {
+  hasLocalVideo: boolean
+  onPresetChange: (presetId: string) => void
+  selectedPresetId: string
+}
+
+type VideoUploadCardProps = {
+  autoplay: boolean
+  hasLocalVideo: boolean
+  onUpload: (event: ChangeEvent<HTMLInputElement>) => void
+}
+
+const videoHeroSide = (
+  <div className="video-demo-highlight" aria-hidden="true">
+    <div className="video-demo-highlight__screen">
+      <span className="video-demo-highlight__badge">LIVE DEMO</span>
+      <div className="video-demo-highlight__play" />
+    </div>
+  </div>
+)
+
+const VideoSourceList = memo(({ hasLocalVideo, onPresetChange, selectedPresetId }: VideoSourceListProps) => {
+  return (
+    <Card className="video-side-card" elevation={0}>
+      <CardContent sx={{ p: 0 }}>
+        <Stack spacing={2}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <MovieRoundedIcon color="primary" />
+            <Typography variant="h6">示例片源</Typography>
+          </Box>
+
+          <List disablePadding className="video-source-list">
+            {presetVideos.map((item) => {
+              const isActive = !hasLocalVideo && item.id === selectedPresetId
+
+              return (
+                <ListItem disablePadding key={item.id}>
+                  <Card className={`video-source-card${isActive ? ' is-active' : ''}`} elevation={0}>
+                    <CardActionArea onClick={() => onPresetChange(item.id)}>
+                      <CardContent sx={{ p: 2 }}>
+                        <Stack spacing={1.25}>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
+                            <Typography variant="subtitle1">{item.title}</Typography>
+                            <Chip label={item.duration} size="small" variant="outlined" />
+                          </Box>
+                          <Typography variant="body2" color="text.secondary">
+                            {item.description}
+                          </Typography>
+                          <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
+                            <Chip label={item.tag} size="small" color={isActive ? 'primary' : 'default'} />
+                            {isActive ? <Chip label="当前播放" size="small" color="success" /> : null}
+                          </Box>
+                        </Stack>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </ListItem>
+              )
+            })}
+          </List>
+        </Stack>
+      </CardContent>
+    </Card>
+  )
+})
+
+const VideoTipsCard = memo(() => {
+  return (
+    <Card className="video-side-card" elevation={0}>
+      <CardContent>
+        <Stack spacing={2}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <PlayCircleOutlineRoundedIcon color="primary" />
+            <Typography variant="h6">使用建议</Typography>
+          </Box>
+          <Alert severity="info" variant="outlined">
+            这页更适合演示播放器接入、试看页或课程回放原型，不建议直接当成生产播放器。
+          </Alert>
+          <List disablePadding>
+            {capabilityList.map((item) => (
+              <ListItem key={item} disableGutters>
+                <ListItemText primary={item} />
+              </ListItem>
+            ))}
+          </List>
+        </Stack>
+      </CardContent>
+    </Card>
+  )
+})
+
+const VideoUploadCard = memo(({ autoplay, hasLocalVideo, onUpload }: VideoUploadCardProps) => {
+  return (
+    <Card className="video-side-card" elevation={0}>
+      <CardContent>
+        <Stack spacing={2}>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <CloudUploadRoundedIcon color="primary" />
+            <Typography variant="h6">本地视频预览</Typography>
+          </Box>
+          <Typography color="text.secondary" variant="body2">
+            选择本地 mp4 / webm / ogg 文件，适合做上传前预览，后续可继续接入 OSS、S3 或业务后台。
+          </Typography>
+          <Button component="label" variant="contained" startIcon={<CloudUploadRoundedIcon />}>
+            选择本地视频
+            <input
+              accept="video/mp4,video/webm,video/ogg"
+              className="video-upload-input"
+              id="video-upload-input"
+              onChange={onUpload}
+              type="file"
+            />
+          </Button>
+          <Divider />
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            <Chip label={hasLocalVideo ? '已加载本地文件' : '当前使用内置片源'} color={hasLocalVideo ? 'success' : 'default'} />
+            <Chip label={autoplay ? '自动播放' : '手动播放'} variant="outlined" />
+          </Box>
+        </Stack>
+      </CardContent>
+    </Card>
+  )
+})
+
 const VideoDemo = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null)
   const objectUrlRef = useRef<string | null>(null)
@@ -90,8 +214,12 @@ const VideoDemo = () => {
   const [autoplay, setAutoplay] = useState(true)
   const [muted, setMuted] = useState(true)
   const [isSwitchingSource, setIsSwitchingSource] = useState(false)
+  const hasLocalVideo = localVideo !== null
 
-  const currentVideo = localVideo ?? presetVideos.find((item) => item.id === selectedPresetId) ?? presetVideos[0]
+  const currentVideo = useMemo(
+    () => localVideo ?? presetVideos.find((item) => item.id === selectedPresetId) ?? presetVideos[0],
+    [localVideo, selectedPresetId],
+  )
 
   useEffect(() => {
     return () => {
@@ -125,7 +253,7 @@ const VideoDemo = () => {
     videoElement.load()
   }, [currentVideo.src])
 
-  const startSourceSwitch = () => {
+  const startSourceSwitch = useCallback(() => {
     if (switchTimeoutRef.current !== null) {
       window.clearTimeout(switchTimeoutRef.current)
       switchTimeoutRef.current = null
@@ -133,7 +261,7 @@ const VideoDemo = () => {
 
     setIsSwitchingSource(true)
     videoRef.current?.pause()
-  }
+  }, [])
 
   useEffect(() => {
     const videoElement = videoRef.current
@@ -145,8 +273,8 @@ const VideoDemo = () => {
     void videoElement.play().catch(() => {})
   }, [autoplay, isSwitchingSource])
 
-  const handlePresetChange = (presetId: string) => {
-    if (presetId === selectedPresetId && localVideo === null) {
+  const handlePresetChange = useCallback((presetId: string) => {
+    if (presetId === selectedPresetId && !hasLocalVideo) {
       return
     }
 
@@ -160,9 +288,9 @@ const VideoDemo = () => {
     }
 
     setLocalVideo(null)
-  }
+  }, [autoplay, hasLocalVideo, selectedPresetId, startSourceSwitch])
 
-  const handleUpload = (event: ChangeEvent<HTMLInputElement>) => {
+  const handleUpload = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0]
 
     if (!selectedFile) {
@@ -188,9 +316,9 @@ const VideoDemo = () => {
     })
 
     event.target.value = ''
-  }
+  }, [autoplay, startSourceSwitch])
 
-  const handleReplay = () => {
+  const handleReplay = useCallback(() => {
     const videoElement = videoRef.current
 
     if (!videoElement) {
@@ -199,9 +327,9 @@ const VideoDemo = () => {
 
     videoElement.currentTime = Math.max(0, videoElement.currentTime - 5)
     void videoElement.play().catch(() => {})
-  }
+  }, [])
 
-  const handleFastForward = () => {
+  const handleFastForward = useCallback(() => {
     const videoElement = videoRef.current
 
     if (!videoElement) {
@@ -211,9 +339,9 @@ const VideoDemo = () => {
     const duration = Number.isFinite(videoElement.duration) ? videoElement.duration : Number.MAX_SAFE_INTEGER
     videoElement.currentTime = Math.min(duration, videoElement.currentTime + 5)
     void videoElement.play().catch(() => {})
-  }
+  }, [])
 
-  const finishSourceSwitch = () => {
+  const finishSourceSwitch = useCallback(() => {
     const videoElement = videoRef.current
 
     if (switchTimeoutRef.current !== null) {
@@ -230,22 +358,22 @@ const VideoDemo = () => {
 
       pendingAutoplayAfterSwitchRef.current = false
     }, 240)
-  }
+  }, [])
 
-  const handleVideoLoaded = () => {
+  const handleVideoLoaded = useCallback(() => {
     finishSourceSwitch()
-  }
+  }, [finishSourceSwitch])
 
-  const handleVideoLoadStart = () => {
+  const handleVideoLoadStart = useCallback(() => {
     if (!isSwitchingSource) {
       setIsSwitchingSource(true)
     }
-  }
+  }, [isSwitchingSource])
 
-  const handleVideoError = () => {
+  const handleVideoError = useCallback(() => {
     pendingAutoplayAfterSwitchRef.current = false
     finishSourceSwitch()
-  }
+  }, [finishSourceSwitch])
 
   return (
     <Box component="main" className="video-demo-page" sx={{ minHeight: '100vh', py: { xs: 4, md: 6 } }}>
@@ -256,14 +384,7 @@ const VideoDemo = () => {
           title="新建一个可直接播放视频的演示页面"
           description="这个页面展示了 React 项目里最常见的视频播放场景：切换片源、本地视频预览，以及基于 HTML5 播放器继续扩展控制条和业务逻辑。"
           metrics={featureCards}
-          side={(
-            <div className="video-demo-highlight" aria-hidden="true">
-              <div className="video-demo-highlight__screen">
-                <span className="video-demo-highlight__badge">LIVE DEMO</span>
-                <div className="video-demo-highlight__play" />
-              </div>
-            </div>
-          )}
+          side={videoHeroSide}
         />
 
         <SectionPanel
@@ -409,96 +530,19 @@ const VideoDemo = () => {
 
             <Grid size={{ xs: 12, lg: 4 }}>
               <Stack spacing={2.5} className="video-side-panel">
-                <Card className="video-side-card" elevation={0}>
-                  <CardContent sx={{ p: 0 }}>
-                    <Stack spacing={2}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                      <MovieRoundedIcon color="primary" />
-                      <Typography variant="h6">示例片源</Typography>
-                      </Box>
+                <VideoSourceList
+                  hasLocalVideo={hasLocalVideo}
+                  onPresetChange={handlePresetChange}
+                  selectedPresetId={selectedPresetId}
+                />
 
-                      <List disablePadding className="video-source-list">
-                        {presetVideos.map((item) => {
-                          const isActive = localVideo === null && item.id === selectedPresetId
+                <VideoTipsCard />
 
-                          return (
-                            <ListItem disablePadding key={item.id}>
-                              <Card className={`video-source-card${isActive ? ' is-active' : ''}`} elevation={0}>
-                                <CardActionArea onClick={() => handlePresetChange(item.id)}>
-                                  <CardContent sx={{ p: 2 }}>
-                                    <Stack spacing={1.25}>
-                                      <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
-                                        <Typography variant="subtitle1">{item.title}</Typography>
-                                        <Chip label={item.duration} size="small" variant="outlined" />
-                                      </Box>
-                                      <Typography variant="body2" color="text.secondary">
-                                        {item.description}
-                                      </Typography>
-                                      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap' }}>
-                                        <Chip label={item.tag} size="small" color={isActive ? 'primary' : 'default'} />
-                                        {isActive ? <Chip label="当前播放" size="small" color="success" /> : null}
-                                      </Box>
-                                    </Stack>
-                                  </CardContent>
-                                </CardActionArea>
-                              </Card>
-                            </ListItem>
-                          )
-                        })}
-                      </List>
-                    </Stack>
-                  </CardContent>
-                </Card>
-
-                <Card className="video-side-card" elevation={0}>
-                  <CardContent>
-                    <Stack spacing={2}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <PlayCircleOutlineRoundedIcon color="primary" />
-                        <Typography variant="h6">使用建议</Typography>
-                      </Box>
-                      <Alert severity="info" variant="outlined">
-                        这页更适合演示播放器接入、试看页或课程回放原型，不建议直接当成生产播放器。
-                      </Alert>
-                      <List disablePadding>
-                        {capabilityList.map((item) => (
-                          <ListItem key={item} disableGutters>
-                            <ListItemText primary={item} />
-                          </ListItem>
-                        ))}
-                      </List>
-                    </Stack>
-                  </CardContent>
-                </Card>
-
-                <Card className="video-side-card" elevation={0}>
-                  <CardContent>
-                    <Stack spacing={2}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                        <CloudUploadRoundedIcon color="primary" />
-                        <Typography variant="h6">本地视频预览</Typography>
-                      </Box>
-                      <Typography color="text.secondary" variant="body2">
-                        选择本地 mp4 / webm / ogg 文件，适合做上传前预览，后续可继续接入 OSS、S3 或业务后台。
-                      </Typography>
-                      <Button component="label" variant="contained" startIcon={<CloudUploadRoundedIcon />}>
-                        选择本地视频
-                        <input
-                          accept="video/mp4,video/webm,video/ogg"
-                          className="video-upload-input"
-                          id="video-upload-input"
-                          onChange={handleUpload}
-                          type="file"
-                        />
-                      </Button>
-                      <Divider />
-                      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                        <Chip label={localVideo ? '已加载本地文件' : '当前使用内置片源'} color={localVideo ? 'success' : 'default'} />
-                        <Chip label={autoplay ? '自动播放' : '手动播放'} variant="outlined" />
-                      </Box>
-                    </Stack>
-                  </CardContent>
-                </Card>
+                <VideoUploadCard
+                  autoplay={autoplay}
+                  hasLocalVideo={hasLocalVideo}
+                  onUpload={handleUpload}
+                />
               </Stack>
             </Grid>
           </Grid>

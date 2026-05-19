@@ -1,10 +1,11 @@
-import { Suspense } from 'react'
+import { Suspense, lazy } from 'react'
 import type { ComponentType } from 'react'
 import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-router-dom'
-import Navbar from './components/Navbar/index'
 import { appRoutes } from './routes'
 import { useAuthStore } from './stores/auth'
 import './App.css'
+
+const Navbar = lazy(() => import('./components/Navbar/index'))
 
 type RouteAccess = 'guest-only' | 'protected'
 
@@ -49,7 +50,11 @@ const AppShell = () => {
 
   return (
     <div className="app-shell">
-      {shouldShowNavbar ? <Navbar /> : null}
+      {shouldShowNavbar ? (
+        <Suspense fallback={null}>
+          <Navbar />
+        </Suspense>
+      ) : null}
       <div className="app-shell__content">
         <AnimatedRoutes />
       </div>
