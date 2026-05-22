@@ -3,6 +3,11 @@ import { Box, Card, Container, Paper, Stack, Typography } from '@mui/material'
 import type { SxProps, Theme } from '@mui/material/styles'
 import { alpha } from '@mui/material/styles'
 
+const PANEL_RADIUS = { xs: '24px', md: '32px' }
+const HERO_RADIUS = { xs: '28px', md: '36px' }
+const CARD_RADIUS = { xs: '22px', md: '28px' }
+const COMPACT_CARD_RADIUS = { xs: '18px', md: '22px' }
+
 type MetricItem = {
   label: string
   value: string
@@ -69,21 +74,23 @@ export const HeroPanel = ({
       className={className}
       elevation={0}
       sx={[
-        {
+        (theme) => ({
           position: 'relative',
           overflow: 'visible',
           p: { xs: 3.5, md: 6.5 },
-          border: '1px solid rgba(255, 138, 31, 0.18)',
-          borderRadius: 3,
+          border: `1px solid ${alpha(theme.palette.primary.main, 0.18)}`,
+          borderRadius: HERO_RADIUS,
           background:
-            'linear-gradient(135deg, rgba(9,9,10,0.94) 0%, rgba(15,15,18,0.96) 58%, rgba(31,18,10,0.94) 100%)',
-        },
+            theme.palette.mode === 'dark'
+              ? 'linear-gradient(135deg, rgba(9,9,10,0.94) 0%, rgba(15,15,18,0.96) 58%, rgba(31,18,10,0.94) 100%)'
+              : 'linear-gradient(135deg, rgba(255,250,244,0.96) 0%, rgba(252,247,240,0.96) 55%, rgba(245,234,220,0.98) 100%)',
+        }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >
       <Box
         aria-hidden="true"
-          sx={{
+          sx={(theme) => ({
             position: 'absolute',
             inset: 0,
             overflow: 'hidden',
@@ -106,10 +113,13 @@ export const HeroPanel = ({
               width: 360,
               height: 360,
               borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(255, 255, 255, 0.07) 0%, transparent 72%)',
+              background:
+                theme.palette.mode === 'dark'
+                  ? 'radial-gradient(circle, rgba(255, 255, 255, 0.07) 0%, transparent 72%)'
+                  : 'radial-gradient(circle, rgba(31, 57, 77, 0.08) 0%, transparent 72%)',
               content: '""',
             },
-          }}
+          })}
       />
       <Box
         sx={{
@@ -123,7 +133,7 @@ export const HeroPanel = ({
       >
         <Stack spacing={2.5} sx={{ position: 'relative', zIndex: 1 }}>
           <Box
-            sx={{
+            sx={(theme) => ({
               display: 'inline-flex',
               alignItems: 'center',
               gap: 1,
@@ -132,12 +142,15 @@ export const HeroPanel = ({
               py: 0.75,
               borderRadius: 999,
               color: 'primary.dark',
-              backgroundColor: alpha('#155e63', 0.08),
+              backgroundColor:
+                theme.palette.mode === 'dark'
+                  ? alpha('#155e63', 0.08)
+                  : alpha('#ff8a1f', 0.12),
               fontSize: 12,
               fontWeight: 800,
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
-            }}
+            })}
           >
             <Box
               sx={{
@@ -174,13 +187,14 @@ export const HeroPanel = ({
                 <Card
                   elevation={0}
                   key={metric.label}
-                  sx={{
+                  sx={(theme) => ({
                     p: 2.25,
-                    border: '1px solid rgba(21, 94, 99, 0.12)',
-                    borderRadius: 3,
-                    backgroundColor: 'rgba(255,255,255,0.66)',
+                    border: `1px solid ${alpha('#155e63', theme.palette.mode === 'dark' ? 0.12 : 0.18)}`,
+                    borderRadius: COMPACT_CARD_RADIUS,
+                    backgroundColor:
+                      theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.66)' : 'rgba(255,255,255,0.86)',
                     backdropFilter: 'blur(14px)',
-                  }}
+                  })}
                 >
                   <Typography color="primary.dark" sx={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                     {metric.label}
@@ -197,19 +211,22 @@ export const HeroPanel = ({
         {side ? (
           <Paper
             elevation={0}
-            sx={{
+            sx={(theme) => ({
               position: 'relative',
               overflow: 'visible',
               p: { xs: 2.5, md: 3.5 },
-              borderRadius: 3,
-              border: '1px solid rgba(255,255,255,0.08)',
-              backgroundColor: 'rgba(255,255,255,0.04)',
-              boxShadow: '0 24px 48px rgba(0, 0, 0, 0.34)',
-            }}
+              borderRadius: CARD_RADIUS,
+              border: theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(22,28,34,0.08)',
+              backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.72)',
+              boxShadow:
+                theme.palette.mode === 'dark'
+                  ? '0 24px 48px rgba(0, 0, 0, 0.34)'
+                  : '0 18px 40px rgba(130, 110, 80, 0.12)',
+            })}
           >
             <Box
               aria-hidden="true"
-              sx={{
+              sx={(theme) => ({
                 position: 'absolute',
                 inset: 0,
                 overflow: 'hidden',
@@ -222,7 +239,17 @@ export const HeroPanel = ({
                     'linear-gradient(180deg, rgba(255,138,31,0.16) 0%, rgba(255,255,255,0) 36%)',
                   content: '""',
                 },
-              }}
+                ...(theme.palette.mode === 'light'
+                  ? {
+                      '&::after': {
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'linear-gradient(180deg, rgba(255,255,255,0.26) 0%, rgba(255,255,255,0) 54%)',
+                        content: '""',
+                      },
+                    }
+                  : {}),
+              })}
             />
             <Box sx={{ position: 'relative', zIndex: 1 }}>{side}</Box>
           </Paper>
@@ -238,20 +265,20 @@ export const SectionPanel = ({ children, className, description, kicker, sx, tit
       className={className}
       elevation={0}
       sx={[
-          {
+          (theme) => ({
             position: 'relative',
             overflow: 'visible',
             p: { xs: 3.25, md: 5 },
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            borderRadius: 3,
-            backgroundColor: 'rgba(255,255,255,0.04)',
-          },
+            border: theme.palette.mode === 'dark' ? '1px solid rgba(255, 255, 255, 0.08)' : '1px solid rgba(16,20,24,0.08)',
+            borderRadius: PANEL_RADIUS,
+            backgroundColor: theme.palette.mode === 'dark' ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.72)',
+          }),
         ...(Array.isArray(sx) ? sx : [sx]),
       ]}
     >
       <Box
         aria-hidden="true"
-          sx={{
+          sx={(theme) => ({
             position: 'absolute',
             inset: 0,
             overflow: 'hidden',
@@ -263,10 +290,13 @@ export const SectionPanel = ({ children, className, description, kicker, sx, tit
               left: 0,
               right: 0,
               height: 1,
-              background: 'linear-gradient(90deg, rgba(255, 138, 31, 0.6), rgba(255, 255, 255, 0.18), transparent)',
+              background:
+                theme.palette.mode === 'dark'
+                  ? 'linear-gradient(90deg, rgba(255, 138, 31, 0.6), rgba(255, 255, 255, 0.18), transparent)'
+                  : 'linear-gradient(90deg, rgba(255, 138, 31, 0.56), rgba(16, 20, 24, 0.1), transparent)',
               content: '""',
             },
-          }}
+          })}
       />
       <Stack spacing={2.5} sx={{ position: 'relative', zIndex: 1 }}>
         <div>
@@ -292,18 +322,24 @@ export const InfoCard = ({ description, icon, title }: InfoCardProps) => {
   return (
       <Card
       elevation={0}
-        sx={{
+        sx={(theme) => ({
           height: '100%',
-          border: '1px solid rgba(255,255,255,0.08)',
-          borderRadius: 3,
-          background: 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)',
+          border: theme.palette.mode === 'dark' ? '1px solid rgba(255,255,255,0.08)' : '1px solid rgba(16,20,24,0.08)',
+          borderRadius: CARD_RADIUS,
+          background:
+            theme.palette.mode === 'dark'
+              ? 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)'
+              : 'linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(247,241,233,0.76) 100%)',
           transition: 'transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease',
           '&:hover': {
             transform: 'translateY(-4px)',
             borderColor: 'rgba(255, 138, 31, 0.3)',
-            boxShadow: '0 28px 58px rgba(0, 0, 0, 0.32)',
+            boxShadow:
+              theme.palette.mode === 'dark'
+                ? '0 28px 58px rgba(0, 0, 0, 0.32)'
+                : '0 24px 48px rgba(130, 110, 80, 0.16)',
           },
-        }}
+        })}
       >
       <Stack spacing={2} sx={{ p: 3 }}>
         <Box
@@ -312,7 +348,7 @@ export const InfoCard = ({ description, icon, title }: InfoCardProps) => {
             width: 56,
             height: 56,
             placeItems: 'center',
-            borderRadius: 3,
+            borderRadius: '16px',
             color: '#ff8a1f',
             backgroundColor: alpha('#ff8a1f', 0.14),
             border: '1px solid rgba(255, 138, 31, 0.14)',

@@ -1,0 +1,347 @@
+.image-demo-page {
+  padding-bottom: 72px;
+}
+
+.image-demo-hero {
+  border-color: rgba(255, 138, 31, 0.22);
+  background:
+    radial-gradient(circle at top left, rgba(255, 138, 31, 0.18), transparent 34%),
+    radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.12), transparent 32%),
+    linear-gradient(140deg, rgba(17, 17, 21, 0.96) 0%, rgba(12, 12, 14, 0.98) 48%, rgba(28, 18, 9, 0.98) 100%);
+}
+
+.image-demo-highlight {
+  min-height: 260px;
+  display: grid;
+  place-items: center;
+}
+
+.image-demo-highlight__frame {
+  position: relative;
+  width: min(100%, 300px);
+  aspect-ratio: 16 / 10;
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg, rgba(19, 19, 24, 0.92), rgba(54, 28, 8, 0.92)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent);
+  box-shadow:
+    0 26px 45px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.image-demo-highlight__frame::before,
+.image-demo-highlight__frame::after {
+  position: absolute;
+  content: '';
+}
+
+.image-demo-highlight__frame::before {
+  inset: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
+}
+
+.image-demo-highlight__frame::after {
+  right: 34px;
+  bottom: 34px;
+  width: 116px;
+  height: 82px;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 138, 31, 0.92) 0%, rgba(255, 179, 92, 0.88) 100%);
+  clip-path: polygon(0 100%, 0 70%, 34% 40%, 48% 54%, 72% 22%, 100% 58%, 100% 100%);
+}
+
+.image-demo-highlight__badge {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  color: #050505;
+  background: rgba(255, 138, 31, 0.95);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+.image-demo-highlight__mountain {
+  position: absolute;
+  inset: 26px 28px 32px;
+  border-radius: 22px;
+  background:
+    radial-gradient(circle at 22% 20%, rgba(255, 255, 255, 0.2), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent),
+    linear-gradient(160deg, rgba(15, 23, 42, 0.92) 0%, rgba(31, 41, 55, 0.94) 100%);
+}
+
+.image-demo-highlight__mountain::before,
+.image-demo-highlight__mountain::after {
+  position: absolute;
+  content: '';
+}
+
+.image-demo-highlight__mountain::before {
+  inset: auto 26px 18px 18px;
+  height: 86px;
+  border-radius: 18px 18px 12px 12px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0)),
+    linear-gradient(140deg, rgba(255, 138, 31, 0.8), rgba(255, 179, 92, 0.64));
+  clip-path: polygon(0 100%, 0 72%, 18% 56%, 35% 62%, 52% 40%, 70% 66%, 100% 18%, 100% 100%);
+}
+
+.image-demo-highlight__mountain::after {
+  top: 18px;
+  right: 20px;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.2));
+  box-shadow: 0 0 28px rgba(255, 255, 255, 0.14);
+}
+
+.image-demo-stage {
+  overflow: hidden;
+}
+
+.image-player-card,
+.image-side-card,
+.image-status-card {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.03) 100%);
+}
+
+.image-status-card {
+  padding: 18px;
+  border-radius: 20px;
+}
+
+.image-side-panel {
+  height: 100%;
+}
+
+.image-side-card .MuiCardContent-root {
+  padding: 22px;
+}
+
+.image-gallery-panel {
+  min-height: 520px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.image-gallery-panel::-webkit-scrollbar {
+  display: none;
+}
+
+.image-gallery-list {
+  margin: 0;
+}
+
+.image-gallery-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at top, rgba(255, 138, 31, 0.1), transparent 36%),
+    linear-gradient(180deg, rgba(16, 16, 20, 0.98), rgba(10, 10, 12, 0.98));
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.14);
+}
+
+.image-gallery-item__button {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: zoom-in;
+}
+
+.image-gallery-item__image {
+  width: 100%;
+  display: block;
+  aspect-ratio: 1;
+  object-fit: cover;
+  transition:
+    transform 220ms ease,
+    filter 220ms ease;
+}
+
+.image-gallery-item__button:hover .image-gallery-item__image {
+  transform: scale(1.04);
+  filter: saturate(1.05);
+}
+
+.image-gallery-item__hint {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.52);
+  font-size: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.image-gallery-item__delete {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(10px);
+}
+
+.image-gallery-item__delete:hover {
+  background: rgba(220, 38, 38, 0.86);
+}
+
+.image-gallery-item__bar {
+  background: linear-gradient(180deg, rgba(2, 6, 23, 0.12), rgba(2, 6, 23, 0.72));
+}
+
+.image-gallery-item__bar .MuiImageListItemBar-title,
+.image-gallery-item__bar .MuiImageListItemBar-subtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.image-chip.MuiChip-root {
+  color: #050505;
+}
+
+.image-dimensions.MuiChip-root {
+  border-color: rgba(255, 138, 31, 0.28);
+  color: #ffd7b1;
+}
+
+.image-upload-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+}
+
+.image-viewer-dialog .MuiDialog-paper {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top, rgba(255, 138, 31, 0.16), transparent 34%),
+    linear-gradient(180deg, rgba(12, 12, 14, 0.98) 0%, rgba(8, 8, 10, 0.98) 100%);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.42);
+}
+
+.image-viewer-dialog__content {
+  padding: 20px 20px 24px !important;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.image-viewer-dialog__content::-webkit-scrollbar {
+  display: none;
+}
+
+.image-viewer-dialog__stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(160deg, #02060b 0%, #111114 100%);
+  background-size: 28px 28px, 28px 28px, auto;
+  cursor: default;
+  user-select: none;
+}
+
+.image-viewer-dialog__stage.is-zoomed {
+  cursor: grab;
+}
+
+.image-viewer-dialog__stage.is-dragging {
+  cursor: grabbing;
+}
+
+.image-viewer-dialog__close.MuiIconButton-root {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.image-viewer-dialog__close.MuiIconButton-root:hover {
+  background: rgba(255, 138, 31, 0.2);
+}
+
+.image-viewer-dialog__image {
+  width: 100%;
+  max-height: min(78vh, 920px);
+  display: block;
+  object-fit: contain;
+  border-radius: 20px;
+  transform-origin: center center;
+  transition: transform 180ms ease;
+  pointer-events: none;
+}
+
+.image-viewer-dialog__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 16px;
+}
+
+.image-viewer-dialog__actions {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.image-viewer-dialog__hint {
+  padding-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .image-demo-page {
+    padding-bottom: 48px;
+  }
+
+  .image-viewer-dialog__content {
+    padding: 16px 16px 20px !important;
+  }
+
+  .image-viewer-dialog__meta {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .image-viewer-dialog__actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .image-gallery-item__image,
+  .image-viewer-dialog__image {
+    transition: none;
+    animation: none;
+  }
+}

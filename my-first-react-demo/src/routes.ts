@@ -8,6 +8,7 @@ const Contact = lazy(() => import('./pages/Contact'))
 const MUIDemo = lazy(() => import('./pages/muiDemo'))
 const TestDemo = lazy(() => import('./pages/testDemo'))
 const VideoDemo = lazy(() => import('./pages/videoDemo'))
+const ImageDemo = lazy(() => import('./pages/imageDemo'))
 const StateComposeDemo = lazy(() => import('./pages/stateComposeDemo'))
 
 type RouteComponent = ComponentType | LazyExoticComponent<ComponentType>
@@ -69,6 +70,13 @@ export const appRoutes: AppRouteConfig[] = [
     icon: 'video',
     label: 'Video Demo',
     path: '/videoDemo',
+  },
+  {
+    access: 'protected',
+    component: ImageDemo,
+    icon: 'image',
+    label: 'Image Demo',
+    path: '/imageDemo',
   },
   {
     access: 'protected',

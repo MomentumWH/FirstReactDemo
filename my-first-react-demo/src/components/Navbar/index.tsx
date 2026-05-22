@@ -1,27 +1,34 @@
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded'
-import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded'
+import BedtimeRoundedIcon from '@mui/icons-material/BedtimeRounded'
 import ChevronLeftRoundedIcon from '@mui/icons-material/ChevronLeftRounded'
 import ChevronRightRoundedIcon from '@mui/icons-material/ChevronRightRounded'
+import DashboardRoundedIcon from '@mui/icons-material/DashboardRounded'
 import ExitToAppRoundedIcon from '@mui/icons-material/ExitToAppRounded'
 import FiberManualRecordRoundedIcon from '@mui/icons-material/FiberManualRecordRounded'
 import PersonRoundedIcon from '@mui/icons-material/PersonRounded'
+import WbSunnyRoundedIcon from '@mui/icons-material/WbSunnyRounded'
 import { AppBar, Box, Button, Chip, IconButton, Paper, Toolbar, Typography } from '@mui/material'
-import { alpha } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 import { useEffect, useRef, useState } from 'react'
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom'
 import { appRoutes } from '../../routes'
 import { useAuthStore } from '../../stores/auth'
+import { useThemeModeStore } from '../../stores/theme'
 
 const navItems = appRoutes.filter((route) => route.access === 'protected' && !route.hideInNav)
 
 const Navbar = () => {
   const navigate = useNavigate()
   const location = useLocation()
+  const theme = useTheme()
   const navViewportRef = useRef<HTMLDivElement | null>(null)
   const userInfo = useAuthStore((state) => state.userInfo)
   const logout = useAuthStore((state) => state.logout)
+  const mode = useThemeModeStore((state) => state.mode)
+  const toggleMode = useThemeModeStore((state) => state.toggleMode)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(false)
+  const isDark = mode === 'dark'
 
   const handleLogout = () => {
     logout()
@@ -105,8 +112,8 @@ const Navbar = () => {
           width: 'min(1680px, calc(100vw - clamp(64px, calc(4vw + 40px), 88px)))',
           mx: 'auto',
           borderRadius: 8,
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          backgroundColor: 'rgba(12, 12, 14, 0.72)',
+          border: `1px solid ${theme.palette.divider}`,
+          backgroundColor: isDark ? 'rgba(12, 12, 14, 0.72)' : 'rgba(255,255,255,0.74)',
           backdropFilter: 'blur(18px)',
         }}
       >
@@ -133,9 +140,11 @@ const Navbar = () => {
                 height: 54,
                 placeItems: 'center',
                 borderRadius: 4,
-                color: '#fff',
-                background: 'linear-gradient(135deg, #ffffff 0%, #ff8a1f 100%)',
-                boxShadow: '0 16px 32px rgba(255, 138, 31, 0.26)',
+                color: isDark ? '#fff' : '#101418',
+                background: isDark
+                  ? 'linear-gradient(135deg, #ffffff 0%, #ff8a1f 100%)'
+                  : 'linear-gradient(135deg, #ffedd5 0%, #ff8a1f 100%)',
+                boxShadow: isDark ? '0 16px 32px rgba(255, 138, 31, 0.26)' : '0 12px 24px rgba(255, 138, 31, 0.18)',
               }}
             >
               <DashboardRoundedIcon />
@@ -143,7 +152,7 @@ const Navbar = () => {
             <Box sx={{ minWidth: 0, display: 'inline-block', verticalAlign: 'middle', ml: 1.5 }}>
               <Typography sx={{ fontWeight: 800, letterSpacing: '-0.02em' }}>NEON ROUTER</Typography>
               <Typography color="text.secondary" sx={{ fontSize: 13 }}>
-                Black / White / Orange Tech UI
+                {isDark ? 'Black / White / Orange Tech UI' : 'Ivory / Ink / Orange Tech UI'}
               </Typography>
             </Box>
           </Box>
@@ -178,9 +187,9 @@ const Navbar = () => {
                   flex: '0 0 auto',
                   color: '#050505',
                   border: '1px solid transparent',
-                  backgroundColor: 'primary.main',
+                  backgroundColor: theme.palette.primary.main,
                   '&:hover': {
-                    backgroundColor: 'primary.light',
+                    backgroundColor: theme.palette.primary.light,
                   },
                   '&.Mui-disabled': {
                     color: alpha('#050505', 0.45),
@@ -234,7 +243,7 @@ const Navbar = () => {
                         scrollSnapAlign: 'start',
                         color: isActive ? '#050505' : 'text.secondary',
                         backgroundColor: isActive ? 'primary.main' : 'transparent',
-                        border: isActive ? '1px solid transparent' : `1px solid ${alpha('#ffffff', 0.08)}`,
+                        border: isActive ? '1px solid transparent' : `1px solid ${theme.palette.divider}`,
                         '&:hover': {
                           backgroundColor: isActive ? 'primary.light' : alpha('#ff8a1f', 0.08),
                         },
@@ -254,9 +263,9 @@ const Navbar = () => {
                   flex: '0 0 auto',
                   color: '#050505',
                   border: '1px solid transparent',
-                  backgroundColor: 'primary.main',
+                  backgroundColor: theme.palette.primary.main,
                   '&:hover': {
-                    backgroundColor: 'primary.light',
+                    backgroundColor: theme.palette.primary.light,
                   },
                   '&.Mui-disabled': {
                     color: alpha('#050505', 0.45),
@@ -279,6 +288,30 @@ const Navbar = () => {
                 minWidth: 'fit-content',
               }}
             >
+              <Button
+                variant="text"
+                startIcon={isDark ? <WbSunnyRoundedIcon /> : <BedtimeRoundedIcon />}
+                onClick={toggleMode}
+                sx={{
+                  flexShrink: 0,
+                  minWidth: 120,
+                  px: 1.75,
+                  color: theme.palette.text.primary,
+                  border: `1px solid ${alpha(theme.palette.primary.main, isDark ? 0.18 : 0.26)}`,
+                  background:
+                    isDark
+                      ? 'linear-gradient(135deg, rgba(255,138,31,0.16) 0%, rgba(255,255,255,0.04) 100%)'
+                      : 'linear-gradient(135deg, rgba(255,138,31,0.18) 0%, rgba(255,255,255,0.72) 100%)',
+                  '&:hover': {
+                    background:
+                      isDark
+                        ? 'linear-gradient(135deg, rgba(255,138,31,0.24) 0%, rgba(255,255,255,0.06) 100%)'
+                        : 'linear-gradient(135deg, rgba(255,138,31,0.24) 0%, rgba(255,255,255,0.86) 100%)',
+                  },
+                }}
+              >
+                {isDark ? '白天模式' : '黑夜模式'}
+              </Button>
               <Chip
                 icon={<PersonRoundedIcon />}
                 label={userInfo?.user || '用户'}
@@ -286,7 +319,7 @@ const Navbar = () => {
                   maxWidth: 240,
                   borderRadius: 999,
                   px: 1,
-                  backgroundColor: 'rgba(255,255,255,0.06)',
+                  backgroundColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(16,20,24,0.06)',
                   '& .MuiChip-label': {
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',

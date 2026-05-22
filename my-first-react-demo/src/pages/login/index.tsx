@@ -11,6 +11,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material'
+import { alpha } from '@mui/material/styles'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/auth'
 
@@ -133,28 +134,39 @@ const Login = () => {
       >
         <Paper
           elevation={0}
-          sx={{
+          sx={(theme) => ({
             p: { xs: 3, md: 4.5 },
             borderRadius: 3,
-            border: '1px solid rgba(255,255,255,0.72)',
+            border:
+              theme.palette.mode === 'dark'
+                ? '1px solid rgba(255,255,255,0.72)'
+                : '1px solid rgba(255,255,255,0.92)',
             background:
-              'linear-gradient(145deg, rgba(22,53,69,0.94) 0%, rgba(21,94,99,0.9) 50%, rgba(200,107,42,0.86) 100%)',
-            color: '#fff',
+              theme.palette.mode === 'dark'
+                ? 'linear-gradient(145deg, rgba(22,53,69,0.94) 0%, rgba(21,94,99,0.9) 50%, rgba(200,107,42,0.86) 100%)'
+                : 'linear-gradient(145deg, rgba(255,248,240,0.96) 0%, rgba(244,251,247,0.98) 50%, rgba(255,236,214,0.96) 100%)',
+            color: theme.palette.text.primary,
             overflow: 'hidden',
-          }}
+          })}
         >
           <Stack spacing={3.25}>
             <Box
-              sx={{
+              sx={(theme) => ({
                 display: 'grid',
                 width: 58,
                 height: 58,
                 placeItems: 'center',
                 borderRadius: 3,
                 color: '#fff',
-                backgroundColor: 'rgba(255,255,255,0.14)',
-                border: '1px solid rgba(255,255,255,0.18)',
-              }}
+                backgroundColor:
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255,255,255,0.14)'
+                    : alpha(theme.palette.primary.main, 0.82),
+                border:
+                  theme.palette.mode === 'dark'
+                    ? '1px solid rgba(255,255,255,0.18)'
+                    : '1px solid rgba(255,138,31,0.18)',
+              })}
             >
               <ShieldRoundedIcon />
             </Box>
@@ -163,29 +175,46 @@ const Login = () => {
               <Typography sx={{ fontSize: 12, fontWeight: 800, letterSpacing: '0.14em', textTransform: 'uppercase', opacity: 0.84 }}>
                 Secure Access
               </Typography>
-              <Typography variant="h2" sx={{ mt: 1.5, maxWidth: 520, color: '#fff' }}>
-                进入这个更完整的 React 页面样机
+              <Typography variant="h2" sx={{ mt: 1.5, maxWidth: 520, color: 'text.primary' }}>
+                进入这套统一视觉风格的 React 页面样板
               </Typography>
-              <Typography sx={{ mt: 1.5, maxWidth: 560, lineHeight: 1.9, color: 'rgba(255,255,255,0.76)' }}>
-                登录页也被纳入统一视觉系统，左侧负责建立氛围与信息预期，右侧负责快速完成表单动作。这样页面不只是可用，也更像一个真正的产品入口。
+              <Typography
+                sx={(theme) => ({
+                  mt: 1.5,
+                  maxWidth: 560,
+                  lineHeight: 1.9,
+                  color:
+                    theme.palette.mode === 'dark'
+                      ? 'rgba(255,255,255,0.76)'
+                      : alpha(theme.palette.text.primary, 0.72),
+                })}
+              >
+                登录页也纳入了统一的设计系统。左侧负责建立视觉预期，右侧负责快速完成表单交互，
+                这样页面既可用，也更像一个完整产品入口。
               </Typography>
             </div>
 
             <Stack spacing={1.25}>
               {[
-                '统一主题、导航、卡片与表单风格',
+                '统一主题、导航、卡片与表单语言',
                 '保留 TypeScript 的状态与输入约束',
-                '适合继续接入真实鉴权与接口请求',
+                '适合继续接入真实鉴权和接口请求',
               ].map((item) => (
                 <Box
                   key={item}
-                sx={{
-                  px: 1.75,
-                  py: 1.35,
-                  borderRadius: 3,
-                  backgroundColor: 'rgba(255,255,255,0.1)',
-                  border: '1px solid rgba(255,255,255,0.12)',
-                }}
+                  sx={(theme) => ({
+                    px: 1.75,
+                    py: 1.35,
+                    borderRadius: 3,
+                    backgroundColor:
+                      theme.palette.mode === 'dark'
+                        ? 'rgba(255,255,255,0.1)'
+                        : 'rgba(255,255,255,0.68)',
+                    border:
+                      theme.palette.mode === 'dark'
+                        ? '1px solid rgba(255,255,255,0.12)'
+                        : '1px solid rgba(255,138,31,0.14)',
+                  })}
                 >
                   <Typography sx={{ fontWeight: 700 }}>{item}</Typography>
                 </Box>
@@ -196,13 +225,18 @@ const Login = () => {
 
         <Paper
           elevation={0}
-          sx={{
+          sx={(theme) => ({
             p: { xs: 3, md: 4 },
             borderRadius: 3,
-            border: '1px solid rgba(255,255,255,0.72)',
+            border:
+              theme.palette.mode === 'dark'
+                ? '1px solid rgba(255,255,255,0.72)'
+                : '1px solid rgba(255,255,255,0.92)',
             background:
-              'linear-gradient(180deg, rgba(255,255,255,0.88) 0%, rgba(249,252,255,0.94) 100%)',
-          }}
+              theme.palette.mode === 'dark'
+                ? 'linear-gradient(180deg, rgba(255,255,255,0.88) 0%, rgba(249,252,255,0.94) 100%)'
+                : 'linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(250,245,238,0.98) 100%)',
+          })}
         >
           <Stack spacing={2.5}>
             <Box
@@ -213,7 +247,7 @@ const Login = () => {
                 placeItems: 'center',
                 borderRadius: 3,
                 color: '#fff',
-                background: 'linear-gradient(135deg, #155e63, #c86b2a)',
+                background: 'linear-gradient(135deg, #155e63, #ff8a1f)',
               }}
             >
               <LockRoundedIcon />
@@ -227,7 +261,8 @@ const Login = () => {
                 欢迎回来
               </Typography>
               <Typography color="text.secondary" sx={{ mt: 1.25, lineHeight: 1.8 }}>
-                输入账号和密码继续进入项目。当前表单已经统一到新的页面视觉语言，后续接真实登录接口会更自然。
+                输入账号和密码继续进入项目。当前表单已经与全局明暗主题保持同步，
+                后续接真实登录接口时也不会出现风格断层。
               </Typography>
             </div>
 

@@ -79,12 +79,15 @@ const About = () => {
             <ListItem
               key={item}
               disableGutters
-              sx={{
+              sx={(theme) => ({
                 alignItems: 'flex-start',
                 px: 0,
                 py: 1.75,
-                borderBottom: index === workflow.length - 1 ? 'none' : '1px solid rgba(148, 163, 184, 0.14)',
-              }}
+                borderBottom:
+                  index === workflow.length - 1
+                    ? 'none'
+                    : `1px solid ${theme.palette.mode === 'dark' ? 'rgba(148, 163, 184, 0.14)' : 'rgba(16, 20, 24, 0.1)'}`,
+              })}
             >
               <ListItemIcon sx={{ minWidth: 44, mt: 0.25 }}>
                 <TipsAndUpdatesRoundedIcon color="secondary" />
