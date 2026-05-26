@@ -249,8 +249,8 @@ const ImageDemo = () => {
   const [uploadedImages, setUploadedImages] = useState<GalleryImage[]>([])
   const [isImporting, setIsImporting] = useState(false)
   const [isViewerOpen, setIsViewerOpen] = useState(false)
-  const [viewerImageId, setViewerImageId] = useState<string | null>(
-  const [viewerOffset, setViewerOffset] = useState({ x: 0, y: 0 })null)
+  const [viewerImageId, setViewerImageId] = useState<string | null>(null)
+  const [viewerOffset, setViewerOffset] = useState({ x: 0, y: 0 })
   const [viewerScale, setViewerScale] = useState(1)
   const [isViewerDragging, setIsViewerDragging] = useState(false)
   const isCompact = useMediaQuery('(max-width:900px)')
